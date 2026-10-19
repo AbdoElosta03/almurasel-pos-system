@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+alembic
+pydantic-settings
+pwdlib[bcrypt]
+PyJWT
+pytest
+httpx
+tzdata
