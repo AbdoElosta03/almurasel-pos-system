@@ -21,7 +21,7 @@ def get_current_user(
     except (jwt.PyJWTError, KeyError, ValueError):
         raise api_error(status.HTTP_401_UNAUTHORIZED, "invalid_token", "Invalid token") from None
     user = db.get(User, user_id)
-    if user is None or not user.is_active:
+    if user is None or not user.is_active or payload.get("version", 0) != user.token_version:
         raise api_error(status.HTTP_401_UNAUTHORIZED, "invalid_token", "Invalid token")
     return user
 

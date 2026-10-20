@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import { Button } from '../../components/ui/button'
 import { Icon } from '../ui/Icon'
 import { cn } from '../lib/cn'
+import logoLight from '../../assets/logo-light.png'
 
 export function AppShell({ title, home, children }: { title: string; home: string; children: ReactNode }) {
   const { user, logout } = useAuth()
@@ -23,17 +24,31 @@ export function AppShell({ title, home, children }: { title: string; home: strin
     if (typeof historyIndex === 'number' && historyIndex > 0) {
       navigate(-1)
     } else {
-      navigate(home)
+      navigate(location.pathname.startsWith('/cashier/invoices/') ? '/cashier/invoices' : home)
     }
   }
+
+  const backButton = !isHome ? (
+    <Button
+      type="button"
+      size="lg"
+      onClick={goBack}
+      aria-label="العودة إلى الصفحة السابقة"
+      title="رجوع"
+      className={cn('fixed right-5 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-40 rounded-full px-6 shadow-lg shadow-primary/25 sm:right-6', isPos && 'bottom-[calc(6.5rem+env(safe-area-inset-bottom))] lg:bottom-[calc(3.5rem+env(safe-area-inset-bottom))]')}
+    >
+      <Icon name="arrow" className="size-5 rotate-180" />
+      الرجوع إلى الخلف
+    </Button>
+  ) : null
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background">
       <header className="relative z-10 border-b border-border bg-card px-4 py-2 sm:px-6">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
           <Link to={home} className="flex min-h-12 items-center gap-3 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="العودة إلى الرئيسية">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <Icon name="store" className="size-5" />
+            <span className="flex h-10 w-14 shrink-0 items-center justify-center rounded-xl bg-primary">
+              <img src={logoLight} alt="" className="h-full w-full object-contain" />
             </span>
             <span>
               <span className="block text-lg font-extrabold leading-tight text-foreground">المراسل <span className="text-primary">POS</span></span>
@@ -58,18 +73,7 @@ export function AppShell({ title, home, children }: { title: string; home: strin
         </div>
       </header>
       <main className={cn('mx-auto flex w-full max-w-[1600px] flex-1 flex-col p-4 sm:p-6', isPos && 'lg:h-[calc(100dvh-4rem)] lg:min-h-0 lg:flex-none lg:overflow-hidden lg:px-5 lg:py-3')}>{children}</main>
-      {!isHome ? (
-        <Button
-          type="button"
-          size="icon-lg"
-          onClick={goBack}
-          aria-label="العودة إلى الصفحة السابقة"
-          title="رجوع"
-          className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] end-5 z-40 rounded-full shadow-lg shadow-primary/25 sm:end-6"
-        >
-          <Icon name="arrow" className="size-6 rotate-180" />
-        </Button>
-      ) : null}
+      {backButton}
     </div>
   )
 }

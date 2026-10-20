@@ -1,11 +1,28 @@
+import { useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
 import { useAuth } from '../../context/AuthContext'
+import { Alert } from '../../shared/ui/Alert'
 import { LoadingBlock } from '../../shared/ui/LoadingBlock'
 import { LoginForm } from './components/LoginForm'
+import { AdminRecoveryDialog } from './components/AdminRecoveryDialog'
+import logoLight from '../../assets/logo-light.png'
 
 export function LoginPage() {
   const { user, loading } = useAuth()
+  const [recoveryOpen, setRecoveryOpen] = useState(false)
+  const [recoverySuccess, setRecoverySuccess] = useState(false)
+  const logoClicks = useRef({ count: 0, lastClick: 0 })
+
+  const handleLogoClick = () => {
+    const now = Date.now()
+    logoClicks.current.count = now - logoClicks.current.lastClick < 1200 ? logoClicks.current.count + 1 : 1
+    logoClicks.current.lastClick = now
+    if (logoClicks.current.count >= 3) {
+      logoClicks.current.count = 0
+      setRecoveryOpen(true)
+    }
+  }
 
   if (loading) {
     return (
@@ -30,20 +47,9 @@ export function LoginPage() {
         {/* Header Section: Logo & System Title */}
         <div className="flex flex-col items-center text-center space-y-4">
           {/* Logo container with brand primary background */}
-          <div className="relative flex items-center justify-center size-20 rounded-[1.75rem] bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-            <svg viewBox="0 0 100 100" className="size-12 drop-shadow-[0_2px_6px_rgba(0,0,0,0.2)]">
-              <defs>
-                <linearGradient id="accent-grad-login" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#dfaa57" />
-                  <stop offset="100%" stop-color="#f5ca8c" />
-                </linearGradient>
-              </defs>
-              <path d="M25 32H75" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
-              <path d="M35 45C35 40 43 40 47 44C51 48 47 58 39 64H71" stroke="url(#accent-grad-login)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-              <line x1="43" y1="52" x2="57" y2="52" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.4"/>
-              <path d="M75 50L77 56L83 58L77 60L75 66L73 60L67 58L73 56Z" fill="#dfaa57" />
-            </svg>
-          </div>
+          <button type="button" onClick={handleLogoClick} aria-label="شعار المراسل" className="flex h-24 w-36 items-center justify-center rounded-[1.75rem] bg-primary shadow-lg shadow-primary/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+            <img src={logoLight} alt="" className="h-full w-full object-contain" />
+          </button>
           <div>
             <h1 className="text-3xl font-black tracking-tight text-foreground">المراسل <span className="text-primary font-black">POS</span></h1>
             <p className="text-base text-muted-foreground mt-1.5 font-medium">سجّل الدخول للمتابعة إلى مساحة العمل</p>
@@ -51,6 +57,7 @@ export function LoginPage() {
         </div>
 
         {/* Login Form Container */}
+        {recoverySuccess ? <Alert tone="success">تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة.</Alert> : null}
         <div className="motion-safe:animate-fade-in" style={{ animationDelay: '100ms' }}>
           <LoginForm />
         </div>
@@ -60,6 +67,7 @@ export function LoginPage() {
           نظام المراسل لنقاط البيع الذكية · إصدار 1.0.0
         </p>
       </div>
+      <AdminRecoveryDialog open={recoveryOpen} onClose={() => setRecoveryOpen(false)} onRecovered={() => { setRecoveryOpen(false); setRecoverySuccess(true) }} />
     </div>
   )
 }

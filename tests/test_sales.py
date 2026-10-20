@@ -51,3 +51,43 @@ def test_cancel_rules(client, admin_headers, cashier_headers, product):
     assert allowed.json()["status"] == "cancelled"
     repeated = client.post(f"/api/sales/{second.json()['id']}/cancel", headers=admin_headers)
     assert repeated.status_code == 400
+
+
+def test_cashier_invoice_details_only_for_own_open_shift(client, admin_headers, cashier_headers, product):
+    opened = client.post('/api/shifts/open', headers=cashier_headers, json={'opening_cash_lyd': 0})
+    assert opened.status_code == 201, opened.text
+    sale = client.post(
+        '/api/sales',
+        headers=cashier_headers,
+        json={'payment_method': 'cash', 'items': [{'product_id': product['id'], 'qty': 2}]},
+    )
+    assert sale.status_code == 201, sale.text
+    sale_id = sale.json()['id']
+    listed = client.get('/api/sales/my-open-shift', headers=cashier_headers)
+    assert listed.status_code == 200, listed.text
+    assert listed.json()['items'] == [{
+        'id': sale_id,
+        'payment_method': sale.json()['payment_method'],
+        'status': sale.json()['status'],
+        'total_lyd': sale.json()['total_lyd'],
+        'created_at': sale.json()['created_at'],
+        'item_count': 1,
+    }]
+    url = f'/api/sales/my-open-shift/{sale_id}'
+    details = client.get(url, headers=cashier_headers)
+    assert details.status_code == 200, details.text
+    assert details.json() == sale.json()
+    assert client.get(url, headers=admin_headers).status_code == 403
+    assert client.get(url).status_code == 401
+    assert client.get('/api/sales/my-open-shift/9999', headers=cashier_headers).status_code == 404
+
+    created = client.post('/api/users', headers=admin_headers, json={'username': 'cashier2', 'password': 'pass1234', 'role': 'cashier'})
+    assert created.status_code == 201, created.text
+    login = client.post('/api/auth/login', json={'username': 'cashier2', 'password': 'pass1234'})
+    other_headers = {'Authorization': f"Bearer {login.json()['access_token']}"}
+    assert client.post('/api/shifts/open', headers=other_headers, json={'opening_cash_lyd': 0}).status_code == 201
+    assert client.get(url, headers=other_headers).status_code == 404
+
+    closed = client.post(f"/api/shifts/{opened.json()['id']}/close", headers=cashier_headers, json={'closing_cash_lyd': 0})
+    assert closed.status_code == 200, closed.text
+    assert client.get(url, headers=cashier_headers).status_code == 404

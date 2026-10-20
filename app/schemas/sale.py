@@ -40,3 +40,26 @@ class SaleOut(BaseModel):
     cancelled_at: datetime | None
     cancelled_by: int | None
     items: list[SaleItemOut]
+
+
+class OpenShiftSalesSummary(BaseModel):
+    invoice_count: int
+    cash_lyd: LydAmount
+    card_lyd: LydAmount
+
+
+class SaleSummary(BaseModel):
+    id: int
+    payment_method: str
+    status: str
+    total_lyd: LydAmount
+    created_at: datetime
+    item_count: int
+
+
+class SalePage(BaseModel):
+    summary: OpenShiftSalesSummary
+    items: list[SaleSummary]
+    page: int
+    page_size: int
+    total: int

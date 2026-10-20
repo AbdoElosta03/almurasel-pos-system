@@ -6,6 +6,19 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(min_length=1, max_length=128)
+    new_password: str = Field(min_length=4, max_length=128)
+    confirm_new_password: str = Field(min_length=4, max_length=128)
+
+
+class RecoverAdminRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=64)
+    recovery_key: str = Field(min_length=1)
+    new_password: str = Field(min_length=8, max_length=128)
+    confirm_new_password: str = Field(min_length=8, max_length=128)
+
+
 class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"

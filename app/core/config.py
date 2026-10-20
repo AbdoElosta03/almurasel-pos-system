@@ -11,7 +11,10 @@ class Settings(BaseSettings):
     timezone: str = "Africa/Tripoli"
     admin_username: str = "admin"
     admin_password: str = "admin123"
+    admin_recovery_key: str | None = None
     seed_on_startup: bool = True
+    backup_dir: str = "backups"
+    backup_auto_enabled: bool = True
 
 
 settings = Settings()

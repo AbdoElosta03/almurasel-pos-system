@@ -50,6 +50,7 @@ def update_user(db: Session, user_id: int, body: UserUpdate) -> User:
         raise api_error(status.HTTP_404_NOT_FOUND, "user_not_found", "User not found")
     if body.password is not None:
         user.password_hash = hash_password(body.password)
+        user.token_version += 1
     if body.role is not None:
         user.role = body.role
     if body.is_active is not None:

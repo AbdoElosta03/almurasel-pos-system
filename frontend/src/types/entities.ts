@@ -53,6 +53,49 @@ export interface Sale {
   items: SaleItem[]
 }
 
+export interface PurchaseItem {
+  id: number
+  item_name: string
+  qty: number
+  line_total_lyd: number
+}
+
+export interface PurchaseSummary {
+  id: number
+  purchase_date: string
+  supplier_name: string | null
+  total_lyd: number
+  created_by: number
+  created_at: string
+}
+
+export interface Purchase extends PurchaseSummary {
+  items: PurchaseItem[]
+}
+
+export interface SalePage {
+  summary: OpenShiftSalesSummary
+  items: SaleSummary[]
+  page: number
+  page_size: number
+  total: number
+}
+
+export interface SaleSummary {
+  id: number
+  payment_method: PaymentMethod
+  status: SaleStatus
+  total_lyd: number
+  created_at: string
+  item_count: number
+}
+
+export interface OpenShiftSalesSummary {
+  invoice_count: number
+  cash_lyd: number
+  card_lyd: number
+}
+
 export interface SaleDetail extends Sale {
   cashier_username: string
   cancelled_by_username: string | null

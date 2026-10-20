@@ -8,3 +8,4 @@ pos.db
 !.env.example
 !**/.env.example
 *.sqlite
+backups/

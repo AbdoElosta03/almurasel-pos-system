@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { ApiError } from '../../../api/errors'
 import * as reportsApi from '../../../api/reports'
@@ -9,10 +10,9 @@ import { PageHeader } from '../../../shared/ui/PageHeader'
 import { Card, CardContent } from '../../../components/ui/card'
 import { ReportFilters } from './components/ReportFilters'
 import { ReportSummaryCards } from './components/ReportSummaryCards'
-import { SaleDetailsDialog } from './components/SaleDetailsDialog'
 import { SalesReportTable } from './components/SalesReportTable'
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 10
 
 function isoDate(value: Date) {
   const month = String(value.getMonth() + 1).padStart(2, '0')
@@ -23,6 +23,7 @@ function isoDate(value: Date) {
 const today = isoDate(new Date())
 
 export function ReportsPage() {
+  const navigate = useNavigate()
   const [dateFrom, setDateFrom] = useState(today)
   const [dateTo, setDateTo] = useState(today)
   const [cashierId, setCashierId] = useState('')
@@ -37,7 +38,6 @@ export function ReportsPage() {
     page_size: PAGE_SIZE,
   })
   const [report, setReport] = useState<SalesReport | null>(null)
-  const [selectedSaleId, setSelectedSaleId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -108,11 +108,10 @@ export function ReportsPage() {
           <SalesReportTable
             report={report}
             onPageChange={(page) => setQuery((current) => ({ ...current, page }))}
-            onViewSale={setSelectedSaleId}
+            onViewSale={(saleId) => navigate(`/admin/reports/sales/${saleId}`)}
           />
         ) : null}
       </Card>
-      <SaleDetailsDialog key={selectedSaleId ?? 'closed'} saleId={selectedSaleId} onClose={() => setSelectedSaleId(null)} />
     </div>
   )
 }

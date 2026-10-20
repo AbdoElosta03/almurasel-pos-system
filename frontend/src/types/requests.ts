@@ -5,6 +5,19 @@ export interface LoginRequest {
   password: string
 }
 
+export interface ChangePasswordRequest {
+  current_password: string
+  new_password: string
+  confirm_new_password: string
+}
+
+export interface RecoverAdminRequest {
+  username: string
+  recovery_key: string
+  new_password: string
+  confirm_new_password: string
+}
+
 export interface TokenResponse {
   access_token: string
   token_type: string
@@ -43,6 +56,18 @@ export interface ProductUpdate {
   name?: string
   price_lyd?: number
   is_active?: boolean
+}
+
+export interface PurchaseItemInput {
+  item_name: string
+  qty: number
+  line_total_lyd: number
+}
+
+export interface PurchaseCreate {
+  purchase_date: string
+  supplier_name?: string | null
+  items: PurchaseItemInput[]
 }
 
 export interface ShiftOpen {

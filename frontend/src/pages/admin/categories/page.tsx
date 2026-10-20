@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../compo
 import { CategoryCreateForm } from './components/CategoryCreateForm'
 import { CategoryList } from './components/CategoryList'
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 10
 
 export function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])

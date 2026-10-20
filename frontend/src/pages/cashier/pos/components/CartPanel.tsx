@@ -25,7 +25,7 @@ export function CartPanel({
   const itemCount = lines.reduce((sum, line) => sum + line.qty, 0)
 
   return (
-    <Card className="flex min-h-96 flex-1 flex-col overflow-hidden rounded-[1.5rem] p-5 sm:p-6 lg:min-h-0">
+    <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.5rem] p-5 sm:p-6">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h3 className="flex items-center gap-2 text-lg font-extrabold text-foreground sm:text-xl">
           <Icon name="bag" className="size-6 text-primary" /> الطلب الحالي
@@ -48,17 +48,19 @@ export function CartPanel({
         <ul className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain">
           {lines.map((line) => (
             <li key={line.product.id} className="rounded-xl border border-border bg-background p-3">
-              <p className="text-base font-bold text-foreground">{line.product.name}</p>
-              <p className="text-sm text-muted-foreground">{formatLyd(line.product.price_lyd)}</p>
-              <div className="mt-2 flex items-center gap-2">
-                <Button size="icon" variant="secondary" aria-label={`إنقاص ${line.product.name}`} onClick={() => onChangeQty(line.product.id, line.qty - 1)}>
-                  −
-                </Button>
-                <span className="min-w-10 text-center text-lg font-bold">{line.qty}</span>
-                <Button size="icon" variant="secondary" aria-label={`زيادة ${line.product.name}`} onClick={() => onChangeQty(line.product.id, line.qty + 1)}>
-                  +
-                </Button>
+              <div className="flex min-w-0 items-center justify-between gap-2">
+                <p className="min-w-0 break-words text-base font-bold text-foreground">{line.product.name}</p>
+                <div className="flex shrink-0 items-center gap-1">
+                  <Button size="icon" variant="secondary" aria-label={`إنقاص ${line.product.name}`} onClick={() => onChangeQty(line.product.id, line.qty - 1)}>
+                    −
+                  </Button>
+                  <span className="min-w-8 text-center text-lg font-bold">{line.qty}</span>
+                  <Button size="icon" variant="secondary" aria-label={`زيادة ${line.product.name}`} onClick={() => onChangeQty(line.product.id, line.qty + 1)}>
+                    +
+                  </Button>
+                </div>
               </div>
+              <p className="mt-1 text-sm text-muted-foreground">{formatLyd(line.product.price_lyd)}</p>
             </li>
           ))}
         </ul>

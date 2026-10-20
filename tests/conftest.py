@@ -6,6 +6,7 @@ from sqlalchemy.pool import StaticPool
 from app.core.config import settings
 
 settings.seed_on_startup = False
+settings.backup_auto_enabled = False
 
 from app.db.base import Base
 from app.db.session import get_db, make_engine
