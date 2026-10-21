@@ -9,6 +9,7 @@ import * as salesApi from '../../../api/sales'
 import * as shiftsApi from '../../../api/shifts'
 import type { Category, PaymentMethod, Product } from '../../../types'
 import { formatLyd, lineTotalLyd } from '../../../utils/money'
+import { playPaymentSuccessSound, preparePaymentSound } from '../../../utils/paymentSound'
 import { Alert } from '../../../shared/ui/Alert'
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog'
 import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
@@ -106,6 +107,7 @@ export function PosPage() {
 
   const checkout = async (payment_method: PaymentMethod) => {
     if (checkoutInProgress.current || lines.length === 0) return
+    preparePaymentSound()
     checkoutInProgress.current = true
     setBusy(true)
     setToast({ tone: 'loading', text: 'جاري حفظ الفاتورة...' })
@@ -115,6 +117,7 @@ export function PosPage() {
         payment_method,
         items: lines.map((line) => ({ product_id: line.product.id, qty: line.qty })),
       })
+      playPaymentSuccessSound()
       setLines([])
       setCartOpen(false)
       setToast({ tone: 'success', text: 'تم إنشاء الفاتورة بنجاح' })

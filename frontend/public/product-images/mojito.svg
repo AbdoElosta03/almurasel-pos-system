@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">موهيتو</title>
+  <rect width="320" height="240" rx="28" fill="#e8f7ef"/>
+  <circle cx="160" cy="119" r="91" fill="#fff" opacity=".72"/>
+  <path d="M107 52h106l-12 155h-82L107 52Z" fill="#f8fffb" stroke="#12534e" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M116 100h88l-8 101h-70l-10-101Z" fill="#bce8c8" opacity=".9"/>
+  <g fill="#fff" stroke="#9dc9b1" stroke-width="3"><path d="m126 114 25-7 7 24-25 7Z"/><path d="m163 139 27-4 4 26-27 4Z"/><path d="m132 166 24-8 8 24-24 8Z"/></g>
+  <path d="m187 22-20 101" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <g fill="#4ea763" stroke="#2f7543" stroke-width="4"><path d="M138 147c-24-17-34 8-11 20 15 8 27-1 11-20Z"/><path d="M171 113c23-18 35 6 13 20-15 9-28 1-13-20Z"/><path d="M181 177c21-16 32 6 12 18-14 8-25 1-12-18Z"/></g>
+  <path d="M205 54a35 35 0 0 1 48 13l-31 17-17-30Z" fill="#9bd65b" stroke="#4a8b36" stroke-width="5"/>
+  <path d="M211 59a24 24 0 0 1 32 8l-20 11-12-19Z" fill="#efffa9"/>
+  <g fill="#fff"><circle cx="134" cy="91" r="5"/><circle cx="158" cy="82" r="4"/><circle cx="188" cy="94" r="5"/></g>
+</svg>

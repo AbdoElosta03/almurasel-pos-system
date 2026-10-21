@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">عصير أفوكادو</title>
+  <rect width="320" height="240" rx="28" fill="#e9f5df"/>
+  <circle cx="160" cy="118" r="88" fill="#fff" opacity=".72"/>
+  <path d="M105 54h110l-14 153h-82L105 54Z" fill="#fff" stroke="#315f37" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M115 91h90l-10 110h-70L115 91Z" fill="#83bd62"/>
+  <path d="M120 111c23-13 51 12 80-1" fill="none" stroke="#b9dd8b" stroke-width="8" stroke-linecap="round"/>
+  <path d="m186 24-19 91" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M63 169c0-26 24-65 45-65s45 39 45 65c0 24-19 38-45 38s-45-14-45-38Z" fill="#78ad50" stroke="#315f37" stroke-width="6"/>
+  <path d="M79 171c0-18 16-48 29-48s29 30 29 48c0 16-13 25-29 25s-29-9-29-25Z" fill="#d7e99d"/>
+  <circle cx="108" cy="173" r="17" fill="#8b512c"/>
+</svg>

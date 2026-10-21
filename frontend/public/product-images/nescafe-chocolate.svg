@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">نسكافيه كامل بالشوكولاتة</title>
+  <rect width="320" height="240" rx="28" fill="#4f2f26"/>
+  <circle cx="160" cy="118" r="88" fill="#fff" opacity=".08"/>
+  <path d="M105 86h110l-13 112h-84L105 86Z" fill="#f8eee3" stroke="#dfaa57" stroke-width="7" stroke-linejoin="round"/>
+  <ellipse cx="160" cy="87" rx="55" ry="15" fill="#fff4dc" stroke="#dfaa57" stroke-width="7"/>
+  <path d="M115 85c11-24 28-22 45 0 17-24 34-22 45 0" fill="#fff"/>
+  <path d="M123 103c25 15 50-15 74 0s-49 28-69 49 18 31 63 18" fill="none" stroke="#6d3b2a" stroke-width="9" stroke-linecap="round"/>
+  <rect x="137" y="124" width="46" height="35" rx="6" fill="#70452f" transform="rotate(-8 160 142)"/>
+  <path d="m153 126 5 31M169 124l-4 32" stroke="#a86a45" stroke-width="3"/>
+</svg>

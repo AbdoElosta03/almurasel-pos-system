@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">سندوتش تونة وجبنة</title>
+  <rect width="320" height="240" rx="28" fill="#eef5e8"/>
+  <circle cx="160" cy="119" r="92" fill="#fff" opacity=".74"/>
+  <ellipse cx="160" cy="193" rx="112" ry="17" fill="#c7d6c1" opacity=".62"/>
+  <path d="M62 153 151 68c6-6 13-6 19 0l88 85H62Z" fill="#e7b75e" stroke="#79502b" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m76 154 84-42 84 42-84 37-84-37Z" fill="#fff3c4" stroke="#d49a3f" stroke-width="7" stroke-linejoin="round"/>
+  <path d="m83 147 77-25 77 25-77 26-77-26Z" fill="#f2cc43"/>
+  <path d="M94 142c19-18 36 10 55-7s34 11 53-7 31 8 40 3" fill="none" stroke="#9aa6a0" stroke-width="13" stroke-linecap="round"/>
+  <path d="M99 128c18 10 29-9 46 1s29-8 46 1 28-7 43 1" fill="none" stroke="#4d9a58" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="122" cy="139" r="4" fill="#5b6570"/><circle cx="169" cy="138" r="4" fill="#5b6570"/><circle cx="208" cy="140" r="4" fill="#5b6570"/>
+  <path d="M62 174h196" stroke="#12534e" stroke-width="7" stroke-linecap="round"/>
+</svg>

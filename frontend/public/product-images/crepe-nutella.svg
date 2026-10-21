@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">كريب نوتيلا</title>
+  <rect width="320" height="240" rx="28" fill="#f7ecdf"/>
+  <circle cx="160" cy="120" r="91" fill="#fff" opacity=".72"/>
+  <ellipse cx="160" cy="190" rx="103" ry="18" fill="#d9c5af" opacity=".55"/>
+  <path d="M69 175 244 72l6 109-181-6Z" fill="#e8b85f" stroke="#8b522b" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M94 165 231 86l-6 25-107 60-24-6Z" fill="#fff0bd"/>
+  <path d="M113 153c15-18 26 12 41-6s26 12 42-7 24 8 38-8" fill="none" stroke="#5b3323" stroke-width="11" stroke-linecap="round"/>
+  <path d="M137 172c8-18 18-18 27 0M184 155c7-17 17-17 25 0" fill="none" stroke="#70452f" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#c98a4a" stroke="#82502d" stroke-width="3"><ellipse cx="110" cy="128" rx="9" ry="6" transform="rotate(-25 110 128)"/><ellipse cx="154" cy="112" rx="9" ry="6" transform="rotate(20 154 112)"/><ellipse cx="204" cy="91" rx="9" ry="6" transform="rotate(-12 204 91)"/></g>
+  <path d="M79 184h176" stroke="#12534e" stroke-width="7" stroke-linecap="round"/>
+</svg>

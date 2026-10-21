@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">قنينة ماء</title>
+  <rect width="320" height="240" rx="28" fill="#e8f5fa"/>
+  <circle cx="160" cy="120" r="92" fill="#fff" opacity=".74"/>
+  <path d="M137 39h46v24c0 9 6 17 14 24 10 9 16 21 16 35v71c0 14-11 25-25 25h-56c-14 0-25-11-25-25v-71c0-14 6-26 16-35 8-7 14-15 14-24V39Z" fill="#dff5ff" stroke="#277a9b" stroke-width="7"/>
+  <path d="M134 38h52v20h-52z" fill="#318db2" stroke="#1d6684" stroke-width="6"/>
+  <path d="M111 126h98v59h-98z" fill="#fff" opacity=".9"/>
+  <path d="M111 137c25-17 44 13 70-3 11-7 20-7 28-3v44h-98v-38Z" fill="#52b9df" opacity=".75"/>
+  <path d="M151 113c0-13 9-25 9-25s9 12 9 25a9 9 0 1 1-18 0Z" fill="#318db2"/>
+  <path d="M124 73c8-7 14-15 14-24M196 91c8 8 12 18 12 30" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+  <g fill="#fff" opacity=".75"><circle cx="130" cy="153" r="5"/><circle cx="148" cy="170" r="4"/><circle cx="190" cy="150" r="6"/></g>
+</svg>

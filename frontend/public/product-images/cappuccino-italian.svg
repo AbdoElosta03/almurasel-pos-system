@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">كابتشينو إيطالي</title>
+  <rect width="320" height="240" rx="28" fill="#e7f3ef"/>
+  <circle cx="160" cy="117" r="88" fill="#fff" opacity=".78"/>
+  <path d="M97 88h118v60a43 43 0 0 1-43 43h-32a43 43 0 0 1-43-43V88Z" fill="#fff" stroke="#12534e" stroke-width="8"/>
+  <path d="M215 105h14a27 27 0 0 1 0 54h-18" fill="none" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="156" cy="89" rx="59" ry="16" fill="#dcb98c" stroke="#12534e" stroke-width="7"/>
+  <path d="M129 88c5-18 22-20 29-5 8-15 25-13 28 5-13 13-44 14-57 0Z" fill="#fff"/>
+  <path d="M144 62c-10-13 11-18 1-32M178 62c-10-13 11-18 1-32" fill="none" stroke="#dfaa57" stroke-width="7" stroke-linecap="round"/>
+  <path d="M92 198h142" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M139 211h14v12h-14z" fill="#16864b"/><path d="M153 211h14v12h-14z" fill="#fff"/><path d="M167 211h14v12h-14z" fill="#d93b35"/>
+</svg>

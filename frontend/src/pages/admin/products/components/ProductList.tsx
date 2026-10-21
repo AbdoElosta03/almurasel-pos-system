@@ -3,6 +3,7 @@ import { Folder, ImageOff, ImagePlus, Layers3, Tag, ToggleLeft, ToggleRight, Tra
 
 import type { Category, Product } from '../../../../types'
 import { formatLyd } from '../../../../utils/money'
+import { productDisplayImage } from '../../../../utils/productImage'
 import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Card } from '../../../../components/ui/card'
@@ -93,7 +94,9 @@ export function ProductList({
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60 text-lg">
-            {products.map((product, index) => (
+            {products.map((product, index) => {
+              const image = productDisplayImage(product)
+              return (
               <tr
                 key={product.id}
                 tabIndex={0}
@@ -112,7 +115,7 @@ export function ProductList({
                 <td className="min-w-56 px-6 py-4 font-extrabold text-foreground">
                   <div className="flex items-center gap-3">
                     <span className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary/5 text-primary">
-                      {product.image_url ? <img src={product.image_url} alt="" className="h-full w-full object-cover" /> : <Tag className="size-5" />}
+                      {image ? <img src={image} alt="" className="h-full w-full object-cover" /> : <Tag className="size-5" />}
                     </span>
                     <span className="line-clamp-1">{product.name}</span>
                   </div>
@@ -128,7 +131,8 @@ export function ProductList({
                   </Badge>
                 </td>
               </tr>
-            ))}
+              )
+            })}
           </tbody>
         </table>
       </div>
@@ -141,7 +145,7 @@ export function ProductList({
             <div className="space-y-5 pt-2">
               <div className="flex items-center gap-4">
                 <span className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-secondary text-primary">
-                  {selected.image_url ? <img src={selected.image_url} alt="" className="h-full w-full object-cover" /> : <Tag className="size-9" />}
+                  {productDisplayImage(selected) ? <img src={productDisplayImage(selected)!} alt="" className="h-full w-full object-cover" /> : <Tag className="size-9" />}
                 </span>
                 <div className="min-w-0">
                   <h3 className="break-words text-xl font-extrabold">{selected.name}</h3>

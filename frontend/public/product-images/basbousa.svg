@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">بسبوسة</title>
+  <rect width="320" height="240" rx="28" fill="#fff3dc"/>
+  <circle cx="160" cy="117" r="91" fill="#fff" opacity=".72"/>
+  <ellipse cx="160" cy="194" rx="108" ry="17" fill="#d7c3a7" opacity=".58"/>
+  <path d="m72 114 88-49 88 49-88 54-88-54Z" fill="#e0a23f" stroke="#8b5729" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m72 114 88 54 88-54v55l-88 48-88-48v-55Z" fill="#c98631" stroke="#8b5729" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m101 99 89 52M132 82l88 51M219 98l-88 53M188 81l-88 53" stroke="#f5cf79" stroke-width="5"/>
+  <g fill="#d8b56d" stroke="#7f5630" stroke-width="4"><ellipse cx="104" cy="115" rx="10" ry="6" transform="rotate(24 104 115)"/><ellipse cx="158" cy="91" rx="10" ry="6" transform="rotate(-18 158 91)"/><ellipse cx="215" cy="115" rx="10" ry="6" transform="rotate(20 215 115)"/></g>
+  <path d="M89 176c23 5 44 17 65 28M231 176c-23 5-44 17-65 28" stroke="#f0b652" stroke-width="6" stroke-linecap="round"/>
+</svg>

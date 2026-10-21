@@ -30,6 +30,7 @@ def test_seed_catalog_products_prices_and_idempotence(session_factory):
         'كريب نوتيلا عسل ولوز': ('حلويات', 15),
         'كريب حار أجبان': ('حلويات', 18),
         'سموذي': ('مشروبات', 10),
+        'قنينة ماء': ('مشروبات', 1),
     }
 
     with session_factory() as db:
@@ -44,5 +45,7 @@ def test_seed_catalog_products_prices_and_idempotence(session_factory):
         db.commit()
         seed_catalog(db)
         assert db.scalar(select(Product.price_dirhams).where(Product.name == 'سموذي')) == 12_000
-        assert len(db.scalars(select(Product)).all()) == 23
+        seeded = db.scalars(select(Product)).all()
+        assert len(seeded) == 24
+        assert all(product.image_data and product.image_content_type == 'image/svg+xml' for product in seeded)
         assert [name for name, _, _ in rows[:2]] == ['قهوة عادية', 'قهوة دبل']

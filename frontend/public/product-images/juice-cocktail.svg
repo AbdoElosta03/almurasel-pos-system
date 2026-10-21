@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">عصير كوكتيل</title>
+  <rect width="320" height="240" rx="28" fill="#eef8f0"/>
+  <circle cx="160" cy="118" r="89" fill="#fff" opacity=".74"/>
+  <path d="M103 53h114l-15 154h-84L103 53Z" fill="#fff" stroke="#12534e" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M115 94h90l-4 39h-82l-4-39Z" fill="#f5b82e"/>
+  <path d="M119 133h82l-4 35h-75l-3-35Z" fill="#e94b64"/>
+  <path d="M122 168h75l-3 33h-69l-3-33Z" fill="#65ae61"/>
+  <path d="m188 24-21 91" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M204 56a35 35 0 0 1 47 15l-32 16-15-31Z" fill="#ffcf45" stroke="#d78a24" stroke-width="5"/>
+  <path d="M208 62a25 25 0 0 1 33 10l-21 10-12-20Z" fill="#fff5b0"/>
+  <circle cx="82" cy="169" r="26" fill="#e94b64" stroke="#9d3143" stroke-width="6"/><path d="m69 148 13-14 10 15" fill="#39945a" stroke="#216c3f" stroke-width="5"/>
+</svg>

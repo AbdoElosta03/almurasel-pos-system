@@ -1,4 +1,5 @@
 from decimal import Decimal
+from pathlib import Path
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -39,7 +40,37 @@ CATALOG_PRODUCTS: tuple[tuple[str, str, str], ...] = (
     ("كريب نوتيلا عسل ولوز", "حلويات", "15"),
     ("كريب حار أجبان", "حلويات", "18"),
     ("سموذي", "مشروبات", "10"),
+    ("قنينة ماء", "مشروبات", "1"),
 )
+
+PRODUCT_IMAGE_FILES = {
+    "قهوة عادية": "coffee-regular.svg",
+    "قهوة دبل": "coffee-double.svg",
+    "نسكافيه عادي": "nescafe.svg",
+    "نسكافيه تام": "nescafe-chocolate.svg",
+    "كابتشينو طلياني": "cappuccino-italian.svg",
+    "شاهي مغربي": "moroccan-tea.svg",
+    "قهوة عربيه": "coffee-regular.svg",
+    "بريوش نوتيلا كامل": "brioche-croissant.svg",
+    "بريوش جبنه وزعتر": "brioche-croissant.svg",
+    "بسبوسة الغزال": "basbousa.svg",
+    "مالفي عادي": "mille-feuille.svg",
+    "مالفي العالم": "mille-feuille-chocolate.svg",
+    "عصير فراوله طبيعي": "juice-strawberry.svg",
+    "عصير مانجا طبيعي": "juice-mango.svg",
+    "عصير كوكيتيل": "juice-cocktail.svg",
+    "عصير افوكادو": "juice-avocado.svg",
+    "مشروب بيبسي": "pepsi-drink.svg",
+    "موخيتو": "mojito.svg",
+    "سندوتش تن وجبنه": "sandwich-tuna-cheese.svg",
+    "كريب نوتيلا": "crepe-nutella.svg",
+    "كريب نوتيلا عسل ولوز": "crepe-nutella.svg",
+    "كريب حار أجبان": "crepe-savory.svg",
+    "سموذي": "smoothie.svg",
+    "قنينة ماء": "water-bottle.svg",
+}
+
+IMAGE_DIR = Path(__file__).resolve().parents[2] / "frontend" / "public" / "product-images"
 
 
 def seed_catalog(db: Session, *, commit: bool = True) -> None:
@@ -57,12 +88,15 @@ def seed_catalog(db: Session, *, commit: bool = True) -> None:
 
     for product_name, category_name, price_lyd in CATALOG_PRODUCTS:
         category = categories[category_name]
+        image_data = (IMAGE_DIR / PRODUCT_IMAGE_FILES[product_name]).read_bytes()
         db.add(
             Product(
                 category_id=category.id,
                 name=product_name,
                 price_dirhams=lyd_to_dirhams(Decimal(price_lyd)),
                 is_active=True,
+                image_data=image_data,
+                image_content_type="image/svg+xml",
             )
         )
 

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">بريوش وكرواسون</title>
+  <rect width="320" height="240" rx="28" fill="#fff4dc"/>
+  <circle cx="160" cy="120" r="88" fill="#fff" opacity=".72"/>
+  <path d="M67 143c17-57 55-83 93-54 38-29 76-3 93 54-18 41-59 54-93 30-34 24-75 11-93-30Z" fill="#dfaa57" stroke="#8b522b" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M101 105c-7 23-5 45 10 67M137 87c-10 31-8 66 2 96M183 87c10 31 8 66-2 96M219 105c7 23 5 45-10 67" fill="none" stroke="#b76f35" stroke-width="8" stroke-linecap="round"/>
+  <path d="M67 143c-11 9-20 24-15 39 20 3 40-4 54-17M253 143c11 9 20 24 15 39-20 3-40-4-54-17" fill="#f0ba62" stroke="#8b522b" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M113 130c31-16 63-16 94 0" fill="none" stroke="#f7d18b" stroke-width="9" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">مالفي العالم بالشوكولاتة</title>
+  <rect width="320" height="240" rx="28" fill="#f2e6df"/>
+  <circle cx="160" cy="120" r="94" fill="#fff" opacity=".7"/>
+  <ellipse cx="164" cy="204" rx="111" ry="14" fill="#c9b5aa" opacity=".55"/>
+  <path d="m71 87 164-26 23 34-165 29-22-37Z" fill="#74412f" stroke="#48271f" stroke-width="7" stroke-linejoin="round"/>
+  <path d="m93 124 165-29-3 26-159 29-3-26Z" fill="#d6ad86" stroke="#74412f" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m96 150 159-29-3 23-153 29-3-23Z" fill="#7d4934" stroke="#4d2c22" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m99 173 153-29-3 24-147 28-3-23Z" fill="#e4c39f" stroke="#74412f" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m102 196 147-28-10 19-128 25-9-16Z" fill="#70402f" stroke="#48271f" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M84 102c19-25 27 19 46-7s28 19 47-7 28 18 47-8 24 8 27 13" fill="none" stroke="#a96e55" stroke-width="6" stroke-linecap="round"/>
+  <path d="M80 91c18-23 27 18 45-6s27 18 45-7 27 18 45-7 24 7 30 12" fill="none" stroke="#c18b70" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">شاهي مغربي</title>
+  <rect width="320" height="240" rx="28" fill="#eaf5ec"/>
+  <circle cx="160" cy="118" r="90" fill="#fff" opacity=".74"/>
+  <path d="M108 86h94l-8 102h-78l-8-102Z" fill="#d7e8dd" stroke="#12534e" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M116 111h78l-6 71h-66l-6-71Z" fill="#d8a33a" opacity=".9"/>
+  <path d="M202 101h16a26 26 0 0 1 0 52h-19" fill="none" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M98 85h115M126 72h70" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M145 62c-9-12 10-17 1-30M177 62c-9-12 10-17 1-30" fill="none" stroke="#dfaa57" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#4a9b58" stroke="#2d7040" stroke-width="4"><path d="M89 151c-30-13-32 17-5 22 17 3 26-8 5-22Z"/><path d="M92 150c10-28 35-13 23 10-8 15-22 17-23-10Z"/><path d="M226 177c-27-17-34 11-9 20 16 6 27-4 9-20Z"/></g>
+  <path d="M91 151c9 10 18 19 28 28" stroke="#2d7040" stroke-width="5" stroke-linecap="round"/>
+  <path d="M91 197h137" stroke="#12534e" stroke-width="7" stroke-linecap="round"/>
+</svg>

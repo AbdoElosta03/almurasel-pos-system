@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">مشروب بيبسي</title>
+  <rect width="320" height="240" rx="28" fill="#e9f0f8"/>
+  <circle cx="160" cy="118" r="90" fill="#fff" opacity=".76"/>
+  <path d="M118 47h84l-7 160h-70L118 47Z" fill="#175aa5" stroke="#103e75" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M117 64h86M121 190h76" stroke="#d6e2ef" stroke-width="7"/>
+  <ellipse cx="160" cy="122" rx="34" ry="34" fill="#fff"/>
+  <path d="M129 112c18-12 42 10 63-5a34 34 0 0 0-62-3l-1 8Z" fill="#d94045"/>
+  <path d="M191 132c-18 12-42-10-63 5a34 34 0 0 0 62 3l1-8Z" fill="#1762ad"/>
+  <path d="M127 124c20-13 42 10 66-5v10c-24 15-46-8-66 5v-10Z" fill="#fff"/>
+  <path d="M130 43h60" stroke="#b8c7d7" stroke-width="9" stroke-linecap="round"/>
+  <g fill="#fff" opacity=".85"><circle cx="91" cy="145" r="8"/><circle cx="218" cy="83" r="6"/><circle cx="226" cy="165" r="10"/><circle cx="96" cy="101" r="5"/></g>
+</svg>

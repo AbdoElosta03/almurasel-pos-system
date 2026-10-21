@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">عصير مانجا</title>
+  <rect width="320" height="240" rx="28" fill="#fff5d8"/>
+  <circle cx="160" cy="118" r="88" fill="#fff" opacity=".7"/>
+  <path d="M104 55h112l-15 151h-82L104 55Z" fill="#fff" stroke="#8a5a22" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M114 95h92l-10 105h-72L114 95Z" fill="#f5b82e"/>
+  <path d="M119 111c30-17 54 15 82-2" fill="none" stroke="#ffdb63" stroke-width="8" stroke-linecap="round"/>
+  <path d="m185 25-19 86" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M70 164c4-35 28-59 59-43 19 22-4 64-42 72-12-5-19-16-17-29Z" fill="#f5b82e" stroke="#a56424" stroke-width="6"/>
+  <path d="M106 123c9-19 25-23 42-18-8 14-23 21-42 18Z" fill="#3f9859" stroke="#26703e" stroke-width="5"/>
+</svg>

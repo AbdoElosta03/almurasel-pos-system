@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">مالفي عادي بالكراميل</title>
+  <rect width="320" height="240" rx="28" fill="#fff3df"/>
+  <circle cx="160" cy="120" r="94" fill="#fff" opacity=".7"/>
+  <ellipse cx="164" cy="204" rx="111" ry="14" fill="#cdb99f" opacity=".55"/>
+  <path d="m71 87 164-26 23 34-165 29-22-37Z" fill="#c87932" stroke="#7e4823" stroke-width="7" stroke-linejoin="round"/>
+  <path d="m93 124 165-29-3 26-159 29-3-26Z" fill="#ffe5a5" stroke="#a6652d" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m96 150 159-29-3 23-153 29-3-23Z" fill="#cf8538" stroke="#8a5227" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m99 173 153-29-3 24-147 28-3-23Z" fill="#fff0bd" stroke="#a6652d" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m102 196 147-28-10 19-128 25-9-16Z" fill="#c87932" stroke="#7e4823" stroke-width="6" stroke-linejoin="round"/>
+  <path d="m86 88 20 32M111 84l20 32M137 80l20 31M163 76l20 31M189 72l20 31M215 68l20 31" stroke="#edae61" stroke-width="5" stroke-linecap="round"/>
+  <path d="m82 101 163-27" stroke="#f3c37b" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">نسكافيه</title>
+  <rect width="320" height="240" rx="28" fill="#f2e8dc"/>
+  <circle cx="160" cy="116" r="84" fill="#fff" opacity=".75"/>
+  <path d="M108 86h100v58a42 42 0 0 1-42 42h-16a42 42 0 0 1-42-42V86Z" fill="#fff" stroke="#70452f" stroke-width="8"/>
+  <path d="M208 103h15a27 27 0 0 1 0 54h-18" fill="none" stroke="#70452f" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="158" cy="87" rx="50" ry="13" fill="#c99765"/>
+  <path d="M119 84c17-8 34 8 50 0 15-7 27 4 39 0" fill="none" stroke="#fff4dc" stroke-width="7" stroke-linecap="round"/>
+  <path d="M139 65c-10-12 11-17 1-31M174 65c-10-12 11-17 1-31" fill="none" stroke="#12534e" stroke-width="7" stroke-linecap="round"/>
+  <path d="M96 193h132" stroke="#70452f" stroke-width="8" stroke-linecap="round"/>
+</svg>

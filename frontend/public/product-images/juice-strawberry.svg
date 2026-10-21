@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title">
+  <title id="title">عصير فراولة</title>
+  <rect width="320" height="240" rx="28" fill="#fff0f2"/>
+  <circle cx="160" cy="118" r="88" fill="#fff" opacity=".72"/>
+  <path d="M105 55h110l-14 151h-82L105 55Z" fill="#fff" stroke="#12534e" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M115 104h90l-9 96h-72l-9-96Z" fill="#e94b64"/>
+  <path d="M119 119c24-15 48 14 82-1" fill="none" stroke="#ff8798" stroke-width="8" stroke-linecap="round"/>
+  <path d="m184 24-18 86" stroke="#12534e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M66 157c0-23 29-36 48-17 18 20-2 52-25 57-13-8-23-23-23-40Z" fill="#e94b64" stroke="#8f293b" stroke-width="6"/>
+  <path d="m78 135 11-15 10 15 16-8-5 20" fill="#388d55" stroke="#20643a" stroke-width="5" stroke-linejoin="round"/>
+  <g fill="#ffd8a8"><circle cx="82" cy="159" r="3"/><circle cx="96" cy="153" r="3"/><circle cx="89" cy="174" r="3"/><circle cx="102" cy="168" r="3"/></g>
+</svg>
