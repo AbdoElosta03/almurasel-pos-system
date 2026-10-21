@@ -19,6 +19,7 @@ export interface Product {
   name: string
   price_lyd: number
   is_active: boolean
+  image_url: string | null
 }
 
 export interface Shift {

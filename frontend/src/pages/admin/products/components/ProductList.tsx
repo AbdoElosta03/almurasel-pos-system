@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, ToggleLeft, ToggleRight, Folder, Tag, Layers3 } from 'lucide-react'
+import { Trash2, ToggleLeft, ToggleRight, Folder, Tag, Layers3, ImagePlus, ImageOff } from 'lucide-react'
 
 import type { Category, Product } from '../../../../types'
 import { formatLyd } from '../../../../utils/money'
@@ -18,6 +18,8 @@ export function ProductList({
   total,
   onPageChange,
   onToggle,
+  onImage,
+  onRemoveImage,
   onDelete,
 }: {
   products: Product[]
@@ -28,11 +30,14 @@ export function ProductList({
   total: number
   onPageChange: (page: number) => void
   onToggle: (product: Product) => Promise<void>
+  onImage: (product: Product, image: File) => Promise<void>
+  onRemoveImage: (product: Product) => Promise<void>
   onDelete: (product: Product) => Promise<void>
 }) {
   const [togglingId, setTogglingId] = useState<number | null>(null)
   const [pendingDelete, setPendingDelete] = useState<Product | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [uploadingId, setUploadingId] = useState<number | null>(null)
 
   if (products.length === 0) {
     return (
@@ -72,7 +77,25 @@ export function ProductList({
     }
   }
 
-  const isActionBusy = togglingId !== null || deleting
+  const uploadImage = async (product: Product, image: File) => {
+    setUploadingId(product.id)
+    try {
+      await onImage(product, image)
+    } finally {
+      setUploadingId(null)
+    }
+  }
+
+  const removeImage = async (product: Product) => {
+    setUploadingId(product.id)
+    try {
+      await onRemoveImage(product)
+    } finally {
+      setUploadingId(null)
+    }
+  }
+
+  const isActionBusy = togglingId !== null || deleting || uploadingId !== null
 
   return (
     <Card className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_12px_40px_-24px_rgba(18,83,78,0.12)]">
@@ -103,8 +126,8 @@ export function ProductList({
                   {/* Product Name */}
                   <td className="px-6 py-4 font-extrabold text-foreground min-w-56">
                     <div className="flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center rounded-xl bg-primary/5 text-primary shrink-0">
-                        <Tag className="size-5" />
+                      <span className="flex size-12 items-center justify-center overflow-hidden rounded-xl bg-primary/5 text-primary shrink-0">
+                        {product.image_url ? <img src={product.image_url} alt="" className="h-full w-full object-cover" /> : <Tag className="size-5" />}
                       </span>
                       <span className="line-clamp-1">{product.name}</span>
                     </div>
@@ -134,6 +157,34 @@ export function ProductList({
                   {/* Actions (Touch buttons with loading indicators) */}
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-3">
+                      <label className={`inline-flex h-11 min-h-11 cursor-pointer items-center gap-1.5 rounded-xl border border-border/80 px-4 text-base font-bold text-foreground hover:bg-secondary ${isActionBusy ? 'pointer-events-none opacity-50' : ''}`}>
+                        <ImagePlus className="size-5 text-primary" />
+                        <span>{uploadingId === product.id ? 'جاري الرفع...' : product.image_url ? 'تغيير الصورة' : 'إضافة صورة'}</span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp"
+                          className="sr-only"
+                          disabled={isActionBusy}
+                          onChange={(event) => {
+                            const image = event.target.files?.[0]
+                            event.target.value = ''
+                            if (image) void uploadImage(product, image)
+                          }}
+                        />
+                      </label>
+                      {product.image_url ? (
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          disabled={isActionBusy}
+                          onClick={() => void removeImage(product)}
+                          className="size-11 min-h-11 rounded-xl"
+                          title="إزالة الصورة واستخدام الافتراضية"
+                          aria-label={`إزالة صورة المنتج ${product.name}`}
+                        >
+                          <ImageOff className="size-5" />
+                        </Button>
+                      ) : null}
                       <Button
                         variant={product.is_active ? 'outline' : 'secondary'}
                         size="sm"

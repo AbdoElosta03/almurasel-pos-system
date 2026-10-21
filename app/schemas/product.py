@@ -26,3 +26,4 @@ class ProductOut(BaseModel):
     name: str
     price_lyd: LydAmount
     is_active: bool
+    image_url: str | None

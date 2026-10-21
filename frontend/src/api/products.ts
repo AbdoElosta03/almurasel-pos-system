@@ -20,6 +20,16 @@ export function updateProduct(productId: number, body: ProductUpdate) {
   return apiPatch<Product>(`/products/${productId}`, body)
 }
 
+export function uploadProductImage(productId: number, file: File) {
+  return apiPost<Product>(`/products/${productId}/image`, file, {
+    headers: { 'Content-Type': file.type || 'application/octet-stream' },
+  })
+}
+
+export function removeProductImage(productId: number) {
+  return apiDelete(`/products/${productId}/image`)
+}
+
 export function deleteProduct(productId: number) {
   return apiDelete(`/products/${productId}`)
 }

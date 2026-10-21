@@ -80,6 +80,26 @@ export function ProductsPage() {
           await productsApi.updateProduct(product.id, { is_active: !product.is_active })
           await load(page)
         }}
+        onImage={async (product, image) => {
+          try {
+            await productsApi.uploadProductImage(product.id, image)
+            await load(page)
+            setToast({ tone: 'success', text: `تم حفظ صورة المنتج «${product.name}»` })
+          } catch (err) {
+            const text = err instanceof ApiError ? err.message : 'تعذر حفظ صورة المنتج'
+            setToast({ tone: 'error', text })
+          }
+        }}
+        onRemoveImage={async (product) => {
+          try {
+            await productsApi.removeProductImage(product.id)
+            await load(page)
+            setToast({ tone: 'success', text: `تمت إزالة صورة «${product.name}» واستخدام الصورة الافتراضية` })
+          } catch (err) {
+            const text = err instanceof ApiError ? err.message : 'تعذر إزالة صورة المنتج'
+            setToast({ tone: 'error', text })
+          }
+        }}
         onDelete={async (product) => {
           try {
             await productsApi.deleteProduct(product.id)
@@ -102,8 +122,16 @@ export function ProductsPage() {
           <div className="pt-2">
             <ProductCreateForm
               categories={categories.filter((c) => c.is_active)}
-              onCreate={async (body) => {
-                await productsApi.createProduct(body)
+              onCreate={async (body, image) => {
+                const product = await productsApi.createProduct(body)
+                if (image) {
+                  try {
+                    await productsApi.uploadProductImage(product.id, image)
+                  } catch (err) {
+                    const text = err instanceof ApiError ? err.message : 'تعذر حفظ صورة المنتج'
+                    setToast({ tone: 'error', text: `تم إنشاء المنتج، لكن ${text}` })
+                  }
+                }
                 if (page === 1) await load(1)
                 else changePage(1)
               }}

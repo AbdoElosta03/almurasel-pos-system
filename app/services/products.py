@@ -2,7 +2,7 @@ from fastapi import status
 
 from app.core.errors import api_error
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, defer
 
 from app.models.category import Category
 from app.models.product import Product
@@ -30,7 +30,9 @@ def create_product(db: Session, body: ProductCreate) -> Product:
 
 
 def list_products(db: Session, user: User, category_id: int | None, page: int | None = None, page_size: int = 20):
-    stmt = select(Product).order_by(Product.id)
+    # Product thumbnails are fetched from their dedicated endpoint. Do not load
+    # every image BLOB while listing the catalog.
+    stmt = select(Product).options(defer(Product.image_data)).order_by(Product.id)
     if category_id is not None:
         stmt = stmt.where(Product.category_id == category_id)
     if user.role != "admin":
@@ -55,6 +57,28 @@ def update_product(db: Session, product_id: int, body: ProductUpdate) -> Product
         product.price_dirhams = lyd_to_dirhams(body.price_lyd)
     if body.is_active is not None:
         product.is_active = body.is_active
+    db.commit()
+    db.refresh(product)
+    return product
+
+
+def set_product_image(db: Session, product_id: int, data: bytes, content_type: str) -> Product:
+    product = db.get(Product, product_id)
+    if product is None:
+        raise api_error(status.HTTP_404_NOT_FOUND, "product_not_found", "Product not found")
+    product.image_data = data
+    product.image_content_type = content_type
+    db.commit()
+    db.refresh(product)
+    return product
+
+
+def remove_product_image(db: Session, product_id: int) -> Product:
+    product = db.get(Product, product_id)
+    if product is None:
+        raise api_error(status.HTTP_404_NOT_FOUND, "product_not_found", "Product not found")
+    product.image_data = None
+    product.image_content_type = None
     db.commit()
     db.refresh(product)
     return product
