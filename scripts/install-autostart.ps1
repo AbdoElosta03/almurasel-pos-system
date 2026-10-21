@@ -43,10 +43,10 @@ try {
 $user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $trigger = New-ScheduledTaskTrigger -AtLogOn -User $user
 $principal = New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -RunLevel Limited
-$settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Seconds 0) -MultipleInstances IgnoreNew -StartWhenAvailable -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
+$settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Seconds 0) -MultipleInstances IgnoreNew -StartWhenAvailable -Hidden -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
 $powershell = Join-Path $PSHOME 'powershell.exe'
 
-$arguments = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "{0}"' -f $runner
+$arguments = '-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}"' -f $runner
 $action = New-ScheduledTaskAction -Execute $powershell -Argument $arguments -WorkingDirectory $root
 Register-ScheduledTask -TaskName $taskNames[0] -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description 'Start Almurasel POS (API and built frontend) at Windows logon' | Out-Null
 Write-Host "Installed $($taskNames[0])"
