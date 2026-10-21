@@ -1,4 +1,5 @@
 from fastapi import status
+import secrets
 
 from app.core.errors import api_error
 from sqlalchemy import select
@@ -29,7 +30,13 @@ def seed_admin(db: Session) -> None:
 
 
 def create_user(db: Session, body: UserCreate) -> User:
-    user = User(username=body.username, password_hash=hash_password(body.password), role=body.role, is_active=True)
+    user = User(
+        username=body.username,
+        password_hash=hash_password(body.password),
+        role=body.role,
+        is_active=True,
+        token_version=secrets.randbelow(2**31 - 1) + 1,
+    )
     db.add(user)
     try:
         db.commit()

@@ -9,3 +9,4 @@ pos.db
 !**/.env.example
 *.sqlite
 backups/
+logs/

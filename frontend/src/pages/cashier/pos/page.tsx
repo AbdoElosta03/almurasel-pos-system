@@ -7,7 +7,7 @@ import * as categoriesApi from '../../../api/categories'
 import * as productsApi from '../../../api/products'
 import * as salesApi from '../../../api/sales'
 import * as shiftsApi from '../../../api/shifts'
-import type { Category, PaymentMethod, Product, Sale } from '../../../types'
+import type { Category, PaymentMethod, Product } from '../../../types'
 import { formatLyd, lineTotalLyd } from '../../../utils/money'
 import { Alert } from '../../../shared/ui/Alert'
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog'
@@ -21,7 +21,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../compo
 import { Input } from '../../../components/ui/input'
 import { CartPanel, type CartLine } from './components/CartPanel'
 import { CategoryFilter } from './components/CategoryFilter'
-import { CheckoutBar } from './components/CheckoutBar'
 import { ProductGrid } from './components/ProductGrid'
 
 export function PosPage() {
@@ -32,9 +31,7 @@ export function PosPage() {
   const [search, setSearch] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [lines, setLines] = useState<CartLine[]>([])
-  const [lastSale, setLastSale] = useState<Sale | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
-  const [confirmCancel, setConfirmCancel] = useState(false)
   const [confirmClear, setConfirmClear] = useState(false)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
@@ -87,11 +84,12 @@ export function PosPage() {
     setLines((current) => {
       const existing = current.find((line) => line.product.id === product.id)
       if (existing) {
-        return current.map((line) =>
-          line.product.id === product.id ? { ...line, qty: line.qty + 1 } : line,
-        )
+        return [
+          { ...existing, qty: existing.qty + 1 },
+          ...current.filter((line) => line.product.id !== product.id),
+        ]
       }
-      return [...current, { product, qty: 1 }]
+      return [{ product, qty: 1 }, ...current]
     })
   }
 
@@ -113,11 +111,10 @@ export function PosPage() {
     setToast({ tone: 'loading', text: 'جاري حفظ الفاتورة...' })
     setCheckoutError(null)
     try {
-      const sale = await salesApi.createSale({
+      await salesApi.createSale({
         payment_method,
         items: lines.map((line) => ({ product_id: line.product.id, qty: line.qty })),
       })
-      setLastSale(sale)
       setLines([])
       setCartOpen(false)
       setToast({ tone: 'success', text: 'تم إنشاء الفاتورة بنجاح' })
@@ -127,24 +124,6 @@ export function PosPage() {
       setToast({ tone: 'error', text: message })
     } finally {
       checkoutInProgress.current = false
-      setBusy(false)
-    }
-  }
-
-  const cancelLast = async () => {
-    if (!lastSale) {
-      return
-    }
-    setBusy(true)
-    setToast(null)
-    try {
-      const cancelled = await salesApi.cancelSale(lastSale.id)
-      setLastSale(cancelled)
-      setConfirmCancel(false)
-      setToast({ tone: 'success', text: `تم إلغاء فاتورة #${cancelled.id}` })
-    } catch (err) {
-      setToast({ tone: 'error', text: err instanceof ApiError ? err.message : 'تعذر الإلغاء' })
-    } finally {
       setBusy(false)
     }
   }
@@ -242,20 +221,8 @@ export function PosPage() {
             <ProductGrid products={visibleProducts} onAdd={addProduct} view={view} />
           </div>
         </div>
-        <div className="hidden min-h-0 flex-col gap-3 lg:flex lg:h-full">
-          <CartPanel lines={lines} totalLyd={totalLyd} onChangeQty={changeQty} onClear={requestClear} />
-          <CheckoutBar disabled={lines.length === 0} busy={busy} onPay={(method) => void checkout(method)} />
-          {lastSale && lastSale.status === 'completed' ? (
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-12 shrink-0 text-red-700 hover:bg-red-50 hover:text-red-800"
-              onClick={() => setConfirmCancel(true)}
-              disabled={busy}
-            >
-              إلغاء آخر فاتورة (#{lastSale.id})
-            </Button>
-          ) : null}
+        <div className="hidden min-h-0 flex-col lg:flex lg:h-full">
+          <CartPanel lines={lines} totalLyd={totalLyd} onChangeQty={changeQty} onClear={requestClear} busy={busy} onPay={(method) => void checkout(method)} />
         </div>
       </div>
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] lg:hidden">
@@ -267,14 +234,8 @@ export function PosPage() {
       <Dialog open={cartOpen} onOpenChange={(open) => { if (!busy) setCartOpen(open) }}>
         <DialogContent className="flex h-[min(80dvh,42rem)] flex-col gap-3 overflow-hidden p-4 sm:max-w-md" aria-describedby={undefined}>
           <DialogHeader><DialogTitle>السلة</DialogTitle></DialogHeader>
-          <CartPanel lines={lines} totalLyd={totalLyd} onChangeQty={changeQty} onClear={requestClear} />
+          <CartPanel lines={lines} totalLyd={totalLyd} onChangeQty={changeQty} onClear={requestClear} busy={busy} onPay={(method) => void checkout(method)} />
           {checkoutError ? <Alert>{checkoutError}</Alert> : null}
-          <CheckoutBar disabled={lines.length === 0} busy={busy} onPay={(method) => void checkout(method)} />
-          {lastSale && lastSale.status === 'completed' ? (
-            <Button variant="ghost" className="shrink-0 text-red-700" disabled={busy} onClick={() => { setCartOpen(false); setConfirmCancel(true) }}>
-              إلغاء آخر فاتورة (#{lastSale.id})
-            </Button>
-          ) : null}
         </DialogContent>
       </Dialog>
       <ConfirmDialog
@@ -285,16 +246,6 @@ export function PosPage() {
         confirmVariant="destructive"
         onConfirm={() => { setLines([]); setCheckoutError(null); setConfirmClear(false) }}
         onClose={() => setConfirmClear(false)}
-      />
-      <ConfirmDialog
-        open={confirmCancel}
-        title="إلغاء آخر فاتورة"
-        description={lastSale ? `سيتم إلغاء فاتورة #${lastSale.id}. هذا الإجراء لا يمكن التراجع عنه.` : ''}
-        confirmLabel="تأكيد الإلغاء"
-        confirmVariant="destructive"
-        busy={busy}
-        onConfirm={() => void cancelLast()}
-        onClose={() => setConfirmCancel(false)}
       />
       <Toast message={toast} onClose={closeToast} centered />
     </div>

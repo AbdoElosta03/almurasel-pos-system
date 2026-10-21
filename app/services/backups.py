@@ -75,18 +75,31 @@ def _create(engine: Engine, kind: str) -> dict:
     return _info(target)
 
 
+def _keep_only(filename: str) -> None:
+    """Remove older managed snapshots only after the replacement is safely written."""
+    for path in directory().iterdir():
+        if path.name != filename and NAME.fullmatch(path.name) and path.is_file() and not path.is_symlink():
+            path.unlink()
+
+
 def create_manual(engine: Engine) -> dict:
     with _lock:
-        return _create(engine, "manual")
+        saved = _create(engine, "manual")
+        _keep_only(saved["filename"])
+        return saved
 
 
 def create_auto_if_due(engine: Engine, now: datetime | None = None) -> dict | None:
     with _lock:
         now = now or datetime.now(timezone.utc)
-        latest = next((item for item in list_backups() if item["kind"] == "auto"), None)
+        # A newer manual or safety snapshot also counts: deleting the old auto
+        # snapshot must not trigger another backup at every hourly check.
+        latest = next(iter(list_backups()), None)
         if latest and now - latest["created_at"] < INTERVAL:
             return None
-        return _create(engine, "auto")
+        saved = _create(engine, "auto")
+        _keep_only(saved["filename"])
+        return saved
 
 
 class InvalidBackup(ValueError):
@@ -160,4 +173,7 @@ def restore(engine: Engine, source: Path) -> dict:
             raise
         finally:
             engine.dispose()
+        # The source can itself be an older saved backup. Do not delete it until
+        # the restore has completed, nor delete the safety copy on failure.
+        _keep_only(safety_copy["filename"])
         return safety_copy

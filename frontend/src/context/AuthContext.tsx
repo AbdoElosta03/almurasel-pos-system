@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react'
 
 import * as authApi from '../api/auth'
+import { queryClient } from '../api/queryCache'
 import type { Role, User } from '../types'
 import { clearSession, getStoredRole, getToken, setSession } from '../utils/storage'
 
@@ -42,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await refresh()
       } catch {
         clearSession()
+        queryClient.clear()
         if (active) {
           setUser(null)
         }
@@ -59,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (username: string, password: string) => {
     const token = await authApi.login({ username, password })
+    queryClient.clear()
     setSession(token.access_token, token.role)
     await refresh()
     return token.role
@@ -66,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     clearSession()
+    queryClient.clear()
     setUser(null)
   }, [])
 

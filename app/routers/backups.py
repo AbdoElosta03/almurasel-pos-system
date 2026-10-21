@@ -14,6 +14,7 @@ from app.core.security import verify_password
 from app.db.session import get_db
 from app.models.user import User
 from app.services import backups
+from app.services.database_reset import reset_database
 
 router = APIRouter(prefix="/backups", tags=["backups"], dependencies=[Depends(require_admin)])
 
@@ -27,6 +28,11 @@ class BackupOut(BaseModel):
 
 class RestoreRequest(BaseModel):
     password: str
+
+
+class ResetRequest(BaseModel):
+    password: str
+    confirmation: str
 
 
 def _confirm(password: str, user: User) -> None:
@@ -106,3 +112,17 @@ def restore_saved_backup(
     except (ValueError, FileNotFoundError):
         raise api_error(404, "backup_not_found", "Backup not found") from None
     return {"safety_backup": _restore(db, source)}
+
+
+@router.post("/reset")
+def reset_all_data(body: ResetRequest, db: Session = Depends(get_db), admin: User = Depends(require_admin)):
+    _confirm(body.password, admin)
+    if body.confirmation != "حذف البيانات":
+        raise api_error(400, "reset_confirmation_required", "Type the confirmation phrase")
+    engine = db.get_bind()
+    admin_id = admin.id
+    db.close()
+    try:
+        return {"safety_backup": reset_database(engine, admin_id)}
+    except (OSError, ValueError, RuntimeError, sqlite3.DatabaseError) as exc:
+        raise api_error(500, "reset_failed", "Could not reset database") from exc

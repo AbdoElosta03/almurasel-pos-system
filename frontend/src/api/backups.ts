@@ -38,3 +38,7 @@ export async function restoreUploadedBackup(file: File, password: string) {
     headers: { 'Content-Type': 'application/octet-stream', 'X-Restore-Password': password },
   })
 }
+
+export function resetDatabase(password: string, confirmation: string) {
+  return apiPost('/backups/reset', { password, confirmation })
+}

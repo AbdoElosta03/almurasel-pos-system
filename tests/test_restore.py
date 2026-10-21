@@ -65,6 +65,7 @@ def test_restore_saved_and_uploaded_backup(tmp_path, monkeypatch):
             safety = restored.json()['safety_backup']
             assert safety['kind'] == 'safety'
             assert backups.backup_path(safety['filename']).is_file()
+            assert [item['filename'] for item in backups.list_backups()] == [safety['filename']]
             assert client.get('/api/categories', headers=headers).status_code == 401
             fresh = client.post('/api/auth/login', json={"username": settings.admin_username, "password": settings.admin_password})
             fresh_headers = {"Authorization": f"Bearer {fresh.json()['access_token']}"}
@@ -77,6 +78,7 @@ def test_restore_saved_and_uploaded_backup(tmp_path, monkeypatch):
                 content=downloaded,
             )
             assert uploaded.status_code == 200, uploaded.text
+            assert [item['filename'] for item in backups.list_backups()] == [uploaded.json()['safety_backup']['filename']]
             assert client.get('/api/categories', headers=fresh_headers).status_code == 401
             new_login = client.post('/api/auth/login', json={"username": settings.admin_username, "password": settings.admin_password})
             assert client.get('/api/categories', headers={"Authorization": f"Bearer {new_login.json()['access_token']}"}).json() == []

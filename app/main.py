@@ -90,6 +90,7 @@ async def guard_restore(request: Request, call_next):
     if not request.url.path.startswith("/api/"):
         return await call_next(request)
     restore = request.method == "POST" and (
+        request.url.path == "/api/backups/reset" or
         request.url.path == "/api/backups/restore-upload" or
         (request.url.path.startswith("/api/backups/") and request.url.path.endswith("/restore"))
     )

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, Database, Download, RotateCcw, Upload } from 'lucide-react'
+import { ArrowRight, Database, Download, RotateCcw, Trash2, Upload } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { createBackup, downloadBackup, listBackups, restoreSavedBackup, restoreUploadedBackup, type Backup } from '../../../../api/backups'
+import { createBackup, downloadBackup, listBackups, resetDatabase, restoreSavedBackup, restoreUploadedBackup, type Backup } from '../../../../api/backups'
 import { ApiError } from '../../../../api/errors'
 import { Button } from '../../../../components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../../../components/ui/dialog'
@@ -26,6 +26,11 @@ export function DatabasePage() {
   const [confirmation, setConfirmation] = useState('')
   const [restoring, setRestoring] = useState(false)
   const [restoreError, setRestoreError] = useState<string | null>(null)
+  const [resetOpen, setResetOpen] = useState(false)
+  const [resetPassword, setResetPassword] = useState('')
+  const [resetConfirmation, setResetConfirmation] = useState('')
+  const [resetBusy, setResetBusy] = useState(false)
+  const [resetError, setResetError] = useState<string | null>(null)
 
   useEffect(() => {
     listBackups()
@@ -40,7 +45,7 @@ export function DatabasePage() {
     setSuccess(null)
     try {
       const backup = await createBackup()
-      setBackups((current) => [backup, ...current])
+       setBackups([backup])
       setSuccess('تم إنشاء النسخة الاحتياطية. يمكنك تنزيلها الآن.')
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'تعذر إنشاء النسخة الاحتياطية')
@@ -82,6 +87,28 @@ export function DatabasePage() {
     setPassword('')
     setConfirmation('')
     setRestoreError(null)
+  }
+
+  const closeReset = () => {
+    setResetOpen(false)
+    setResetPassword('')
+    setResetConfirmation('')
+    setResetError(null)
+  }
+
+  const onReset = async () => {
+    if (!resetPassword || resetConfirmation !== 'حذف البيانات') return
+    setResetBusy(true)
+    setResetError(null)
+    try {
+      await resetDatabase(resetPassword, resetConfirmation)
+      logout()
+      navigate('/login', { replace: true })
+    } catch (err) {
+      setResetError(err instanceof ApiError ? err.message : 'تعذر تصفير البيانات')
+    } finally {
+      setResetBusy(false)
+    }
   }
 
   return (
@@ -138,6 +165,12 @@ export function DatabasePage() {
         }} />
       </Card>
 
+      <Card className="space-y-3 border-destructive/50">
+        <h3 className="flex items-center gap-2 text-lg font-bold text-destructive"><Trash2 className="size-5" aria-hidden="true" /> حذف البيانات وبدء جديد</h3>
+        <p className="text-sm text-muted-foreground">يحذف جميع الفواتير والورديات والمستخدمين الآخرين، ويُبقي حسابك وكلمة مرورك، ثم يعيد التصنيفات والمنتجات الافتراضية. تُنشأ نسخة أمان أولًا.</p>
+        <Button variant="outline" onClick={() => setResetOpen(true)}>حذف البيانات وتفعيل السيدر</Button>
+      </Card>
+
       <Dialog open={restoreSource !== null} onOpenChange={(open) => { if (!open && !restoring) closeRestore() }}>
         <DialogContent>
           <DialogHeader>
@@ -158,6 +191,30 @@ export function DatabasePage() {
             <Button variant="outline" onClick={closeRestore} disabled={restoring}>إلغاء</Button>
             <Button onClick={() => void onRestore()} disabled={!password || confirmation !== 'استعادة' || restoring} loading={restoring}>
               <Upload className="size-4" aria-hidden="true" /> استبدال البيانات
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={resetOpen} onOpenChange={(open) => { if (!open && !resetBusy) closeReset() }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>تأكيد حذف جميع البيانات</DialogTitle>
+            <DialogDescription>ستُحذف الفواتير والورديات والمشتريات وسجل النشاط وكل الحسابات الأخرى. سيبقى حسابك الحالي وكلمة مروره، وستُضاف المنتجات والتصنيفات الافتراضية. يمكن استعادة البيانات من نسخة الأمان.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="reset-password">كلمة مرور المدير الحالية</Label>
+            <Input id="reset-password" type="password" autoComplete="current-password" value={resetPassword} onChange={(event) => setResetPassword(event.target.value)} disabled={resetBusy} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="reset-confirmation">اكتب «حذف البيانات» للتأكيد</Label>
+            <Input id="reset-confirmation" value={resetConfirmation} onChange={(event) => setResetConfirmation(event.target.value)} disabled={resetBusy} />
+          </div>
+          {resetError ? <Alert>{resetError}</Alert> : null}
+          <div className="flex flex-wrap justify-end gap-2">
+            <Button variant="outline" onClick={closeReset} disabled={resetBusy}>إلغاء</Button>
+            <Button variant="destructive" onClick={() => void onReset()} disabled={!resetPassword || resetConfirmation !== 'حذف البيانات' || resetBusy} loading={resetBusy}>
+              <Trash2 className="size-4" aria-hidden="true" /> تأكيد الحذف
             </Button>
           </div>
         </DialogContent>

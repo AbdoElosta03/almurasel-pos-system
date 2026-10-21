@@ -1,10 +1,11 @@
-import type { Product } from '../../../../types'
+import type { PaymentMethod, Product } from '../../../../types'
 import { formatLyd } from '../../../../utils/money'
 import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Card } from '../../../../components/ui/card'
 import { Separator } from '../../../../components/ui/separator'
 import { Icon } from '../../../../shared/ui/Icon'
+import { CheckoutBar } from './CheckoutBar'
 
 export interface CartLine {
   product: Product
@@ -16,19 +17,23 @@ export function CartPanel({
   totalLyd,
   onChangeQty,
   onClear,
+  busy,
+  onPay,
 }: {
   lines: CartLine[]
   totalLyd: number
   onChangeQty: (productId: number, qty: number) => void
   onClear: () => void
+  busy: boolean
+  onPay: (method: PaymentMethod) => void
 }) {
   const itemCount = lines.reduce((sum, line) => sum + line.qty, 0)
 
   return (
-    <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.5rem] p-5 sm:p-6">
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="flex items-center gap-2 text-lg font-extrabold text-foreground sm:text-xl">
-          <Icon name="bag" className="size-6 text-primary" /> الطلب الحالي
+    <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.5rem] p-4">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-base font-extrabold text-foreground sm:text-lg">
+          <Icon name="bag" className="size-5 text-primary" /> الطلب الحالي
           <Badge variant="secondary">{itemCount}</Badge>
         </h3>
         <Button variant="ghost" size="icon" aria-label="مسح السلة" title="مسح السلة" onClick={onClear} disabled={lines.length === 0}>
@@ -65,16 +70,13 @@ export function CartPanel({
           ))}
         </ul>
       ) : null}
-      <Separator className="my-4" />
-      <div className="space-y-3">
-        <div className="flex items-center justify-between text-sm font-semibold text-muted-foreground">
-          <span>المجموع الفرعي</span>
-          <span>{formatLyd(totalLyd)}</span>
-        </div>
+      <Separator className="my-2" />
+      <div className="space-y-2">
         <div className="flex items-center justify-between rounded-xl bg-secondary px-4 py-3 text-secondary-foreground">
           <span className="text-lg font-extrabold">الإجمالي</span>
           <strong className="text-xl font-extrabold sm:text-2xl">{formatLyd(totalLyd)}</strong>
         </div>
+        <CheckoutBar disabled={lines.length === 0} busy={busy} onPay={onPay} />
       </div>
     </Card>
   )

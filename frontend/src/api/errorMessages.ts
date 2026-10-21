@@ -15,6 +15,8 @@ export const errorMessages: Record<string, string> = {
   backup_not_found: 'النسخة الاحتياطية غير موجودة',
   backup_too_large: 'حجم الملف يتجاوز 512 ميغابايت',
   restore_failed: 'تعذرت الاستعادة. راجع نسخة الأمان أو سجل الخادم',
+  reset_confirmation_required: 'اكتب عبارة التأكيد كما هي: حذف البيانات',
+  reset_failed: 'تعذر تصفير البيانات. لم يكتمل الحذف؛ راجع سجل الخادم',
   admin_only: 'هذا الإجراء للمدير فقط',
   cashier_only: 'هذا الإجراء للكاشير فقط',
   not_allowed: 'غير مسموح بهذا الإجراء',
