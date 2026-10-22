@@ -82,9 +82,9 @@ def test_sales_report_filters_pages_and_keeps_cancelled(
     other = client.post(
         "/api/users",
         headers=admin_headers,
-        json={"username": "cashier2", "password": "pass1234", "role": "cashier"},
+        json={"username": "cashier2", "password": "12345678", "role": "cashier"},
     )
-    other_login = client.post("/api/auth/login", json={"username": "cashier2", "password": "pass1234"})
+    other_login = client.post("/api/auth/login", json={"username": "cashier2", "password": "12345678"})
     other_headers = {"Authorization": f"Bearer {other_login.json()['access_token']}"}
     client.post("/api/shifts/open", headers=other_headers, json={"opening_cash_lyd": 0})
     _sell(client, other_headers, product["id"], "cash")

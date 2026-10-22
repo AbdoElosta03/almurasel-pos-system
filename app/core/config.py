@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     jwt_expire_minutes: int = 720
     timezone: str = "Africa/Tripoli"
     admin_username: str = "admin"
-    admin_password: str = "admin123"
+    admin_password: str = "1234"
     admin_recovery_key: str | None = None
     seed_on_startup: bool = True
     backup_dir: str = "backups"

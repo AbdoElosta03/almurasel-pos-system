@@ -8,6 +8,8 @@ import { Button } from '../../../components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../../components/ui/dialog'
 import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
+import { isValidPin } from '../../../shared/lib/pinPolicy'
+import { NumericPinInput } from '../../../shared/ui/NumericPinInput'
 
 export function AdminRecoveryDialog({
   open,
@@ -38,6 +40,10 @@ export function AdminRecoveryDialog({
     setError(null)
     if (newPassword !== confirmation) {
       setError('كلمتا المرور الجديدتان غير متطابقتين')
+      return
+    }
+    if (!isValidPin(newPassword)) {
+      setError('الرمز الجديد يجب أن يكون أرقامًا فقط (من 4 إلى 32 رقمًا)')
       return
     }
     setBusy(true)
@@ -72,12 +78,12 @@ export function AdminRecoveryDialog({
             <Input id="recovery-key" type="password" value={recoveryKey} onChange={(event) => setRecoveryKey(event.target.value)} autoComplete="off" required disabled={busy} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="recovery-password">كلمة المرور الجديدة</Label>
-            <Input id="recovery-password" type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} autoComplete="new-password" minLength={8} maxLength={128} required disabled={busy} />
+            <Label htmlFor="recovery-password">الرمز الجديد (أرقام)</Label>
+            <NumericPinInput id="recovery-password" value={newPassword} onChange={setNewPassword} autoComplete="new-password" disabled={busy} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="recovery-confirmation">تأكيد كلمة المرور الجديدة</Label>
-            <Input id="recovery-confirmation" type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} autoComplete="new-password" minLength={8} maxLength={128} required disabled={busy} />
+            <Label htmlFor="recovery-confirmation">تأكيد الرمز الجديد</Label>
+            <NumericPinInput id="recovery-confirmation" value={confirmation} onChange={setConfirmation} autoComplete="new-password" disabled={busy} />
           </div>
           {error ? <Alert>{error}</Alert> : null}
           <Button type="submit" size="lg" loading={busy} className="w-full">تغيير كلمة مرور المدير</Button>

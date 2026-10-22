@@ -1,5 +1,6 @@
 export type {
   PaymentMethod,
+  DailyClosingResult,
   ReportPeriod,
   ReportStatus,
   Role,
@@ -10,6 +11,8 @@ export type {
 export type {
   AuditLog,
   Category,
+  DailyClosing,
+  DailyClosingList,
   OpenShiftSalesSummary,
   Product,
   Purchase,
@@ -24,6 +27,7 @@ export type {
   SaleItem,
   SalePage,
   Shift,
+  LoginAccount,
   User,
 } from './entities'
 

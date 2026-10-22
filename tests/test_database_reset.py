@@ -19,7 +19,7 @@ def test_reset_preserves_admin_and_backups_then_seeds_catalog(
         admin_id, admin_hash = admin.id, admin.password_hash
 
     assert client.post('/api/users', headers=admin_headers, json={
-        'username': 'second-admin', 'password': 'secret123', 'role': 'admin',
+        'username': 'second-admin', 'password': '87654321', 'role': 'admin',
     }).status_code == 201
     category = client.post('/api/categories', headers=admin_headers, json={'name': 'Custom'}).json()
     product = client.post('/api/products', headers=admin_headers, json={
@@ -61,7 +61,7 @@ def test_reset_preserves_admin_and_backups_then_seeds_catalog(
 
     assert client.get('/api/categories', headers=admin_headers).status_code == 401
     assert client.get('/api/shifts/current', headers=cashier_headers).status_code == 401
-    assert client.post('/api/auth/login', json={'username': 'second-admin', 'password': 'secret123'}).status_code == 401
+    assert client.post('/api/auth/login', json={'username': 'second-admin', 'password': '87654321'}).status_code == 401
     login = client.post('/api/auth/login', json={
         'username': settings.admin_username, 'password': settings.admin_password,
     })
@@ -71,7 +71,7 @@ def test_reset_preserves_admin_and_backups_then_seeds_catalog(
 
     # A newly created user must not inherit a deleted cashier's bearer token.
     assert client.post('/api/users', headers=new_headers, json={
-        'username': 'new-cashier', 'password': 'newpass123', 'role': 'cashier',
+        'username': 'new-cashier', 'password': '11223344', 'role': 'cashier',
     }).status_code == 201
     assert client.get('/api/auth/me', headers=cashier_headers).status_code == 401
 

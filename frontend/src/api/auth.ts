@@ -1,5 +1,9 @@
-import type { ChangePasswordRequest, LoginRequest, RecoverAdminRequest, TokenResponse, User } from '../types'
+import type { ChangePasswordRequest, LoginAccount, LoginRequest, RecoverAdminRequest, TokenResponse, User } from '../types'
 import { apiGet, apiPatch, apiPost } from './client'
+
+export function listLoginAccounts() {
+  return apiGet<LoginAccount[]>('/auth/login-accounts')
+}
 
 export function login(body: LoginRequest) {
   return apiPost<TokenResponse>('/auth/login', body)

@@ -33,7 +33,7 @@ export function OpenShiftPanel({ onOpen }: { onOpen: (openingCashLyd: number) =>
         <p className="mt-1 text-sm text-muted-foreground">أدخل المبلغ الموجود في الصندوق قبل بدء البيع.</p>
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="opening-cash" className="font-bold">نقدية الفتح (د.ل)</Label>
+        <Label htmlFor="opening-cash" className="font-bold">المبلغ الموجود في الدرج قبل البيع (د.ل)</Label>
         <div className="relative">
           <Input
             id="opening-cash"

@@ -27,6 +27,11 @@ class Shift(Base):
     closing_cash_dirhams: Mapped[int | None] = mapped_column(default=None)
     opened_at: Mapped[datetime] = mapped_column(default=utc_now)
     closed_at: Mapped[datetime | None] = mapped_column(default=None)
+    counted_cash_dirhams: Mapped[int | None] = mapped_column(default=None)
+    reconciled_cash_sales_dirhams: Mapped[int | None] = mapped_column(default=None)
+    reconciled_card_sales_dirhams: Mapped[int | None] = mapped_column(default=None)
+    reconciled_at: Mapped[datetime | None] = mapped_column(default=None)
+    reconciled_by: Mapped[int | None] = mapped_column(ForeignKey("users.id"), default=None)
 
     @property
     def opening_cash_lyd(self) -> Decimal:

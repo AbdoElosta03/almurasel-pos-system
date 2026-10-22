@@ -1,10 +1,15 @@
-import type { PaymentMethod, Role, SaleStatus, ShiftStatus } from './common'
+import type { DailyClosingResult, PaymentMethod, Role, SaleStatus, ShiftStatus } from './common'
 
 export interface User {
   id: number
   username: string
   role: Role
   is_active: boolean
+}
+
+export interface LoginAccount {
+  username: string
+  role: Role
 }
 
 export interface Category {
@@ -30,6 +35,30 @@ export interface Shift {
   closing_cash_lyd: number | null
   opened_at: string
   closed_at: string | null
+}
+
+export interface DailyClosing {
+  shift_id: number
+  cashier_id: number
+  cashier_username: string
+  status: ShiftStatus
+  opened_at: string
+  closed_at: string | null
+  opening_cash_lyd: number
+  closing_cash_lyd: number | null
+  sales_total_lyd: number
+  cash_sales_lyd: number
+  card_sales_lyd: number
+  expected_drawer_lyd: number
+  counted_cash_lyd: number | null
+  variance_lyd: number | null
+  result: DailyClosingResult
+  reconciled_at: string | null
+}
+
+export interface DailyClosingList {
+  date: string
+  items: DailyClosing[]
 }
 
 export interface SaleItem {

@@ -6,6 +6,7 @@ import { ApiError } from '../../../../api/errors'
 import type { PurchaseCreate } from '../../../../types'
 import { formatLyd } from '../../../../utils/money'
 import { Alert } from '../../../../shared/ui/Alert'
+import { DatePicker } from '../../../../shared/ui/DatePicker'
 import { Button } from '../../../../components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../../components/ui/dialog'
 import { Input } from '../../../../components/ui/input'
@@ -106,7 +107,7 @@ export function PurchaseCreateForm({ onCreate }: { onCreate: (body: PurchaseCrea
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="purchase-date">تاريخ الشراء</Label>
-            <Input id="purchase-date" type="date" value={purchaseDate} onChange={(event) => setPurchaseDate(event.target.value)} required disabled={busy} />
+            <DatePicker id="purchase-date" value={purchaseDate} onChange={setPurchaseDate} disabled={busy} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="purchase-supplier">المورد (اختياري)</Label>

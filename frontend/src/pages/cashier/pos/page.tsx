@@ -178,7 +178,7 @@ export function PosPage() {
             </span>
             <h3 className="mt-5 text-2xl font-extrabold text-foreground">لا توجد وردية مفتوحة</h3>
             <p className="mt-2 max-w-md text-base leading-relaxed text-muted-foreground">
-              افتح وردية وأدخل نقدية الفتح أولاً، ثم يمكنك العودة إلى نقطة البيع وإنشاء الفواتير.
+              افتح وردية وأدخل المبلغ الموجود في الدرج قبل البيع، ثم يمكنك العودة إلى نقطة البيع وإنشاء الفواتير.
             </p>
             <Button asChild size="lg" className="mt-7 w-full rounded-2xl sm:w-auto sm:min-w-56">
               <Link to="/cashier/shift">

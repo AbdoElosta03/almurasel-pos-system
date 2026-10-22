@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.errors import register_exception_handlers
 from app.db.session import SessionLocal, engine
-from app.routers import audit, auth, backups, categories, products, purchases, reports, sales, shifts, users
+from app.routers import audit, auth, backups, categories, daily_closings, products, purchases, reports, sales, shifts, users
 from app.services.backups import create_auto_if_due
 from app.services.seed import seed_catalog
 from app.services.users import seed_admin
@@ -118,6 +118,7 @@ api.include_router(shifts.router)
 api.include_router(sales.router)
 api.include_router(purchases.router)
 api.include_router(reports.router)
+api.include_router(daily_closings.router)
 api.include_router(audit.router)
 api.include_router(backups.router)
 app.include_router(api)

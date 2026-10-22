@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.password_policy import assert_numeric_pin
 from app.core.security import hash_password
 from app.models.sale import Sale
 from app.models.shift import Shift
@@ -18,6 +19,7 @@ def seed_admin(db: Session) -> None:
     existing = db.scalar(select(User.id).limit(1))
     if existing is not None:
         return
+    assert_numeric_pin(settings.admin_password)
     db.add(
         User(
             username=settings.admin_username,

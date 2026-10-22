@@ -56,10 +56,10 @@ def cashier_headers(client: TestClient, admin_headers):
     created = client.post(
         "/api/users",
         headers=admin_headers,
-        json={"username": "cashier1", "password": "pass1234", "role": "cashier"},
+        json={"username": "cashier1", "password": "12345678", "role": "cashier"},
     )
     assert created.status_code == 201, created.text
-    response = client.post("/api/auth/login", json={"username": "cashier1", "password": "pass1234"})
+    response = client.post("/api/auth/login", json={"username": "cashier1", "password": "12345678"})
     assert response.status_code == 200, response.text
     return {"Authorization": f"Bearer {response.json()['access_token']}"}
 

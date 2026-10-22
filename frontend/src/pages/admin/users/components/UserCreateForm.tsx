@@ -5,6 +5,8 @@ import { Plus, Shield, User, Key } from 'lucide-react'
 import type { Role } from '../../../../types'
 import { Button } from '../../../../components/ui/button'
 import { Input } from '../../../../components/ui/input'
+import { isValidPin } from '../../../../shared/lib/pinPolicy'
+import { NumericPinInput } from '../../../../shared/ui/NumericPinInput'
 import { NativeSelect } from '../../../../components/ui/native-select'
 import { Label } from '../../../../components/ui/label'
 
@@ -37,7 +39,7 @@ export function UserCreateForm({
     }
   }
 
-  const isFormValid = username.trim() && password.trim()
+  const isFormValid = username.trim() && isValidPin(password)
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
@@ -57,14 +59,12 @@ export function UserCreateForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="create-password" className="text-base font-bold text-foreground">كلمة المرور</Label>
+        <Label htmlFor="create-password" className="text-base font-bold text-foreground">رمز الدخول (أرقام فقط)</Label>
         <div className="relative">
-          <Input
+          <NumericPinInput
             id="create-password"
-            type="password"
-            placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={setPassword}
             className="pr-10 h-14 rounded-2xl text-lg"
             disabled={busy}
           />

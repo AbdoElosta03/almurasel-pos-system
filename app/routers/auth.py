@@ -4,10 +4,15 @@ from sqlalchemy.orm import Session
 from app.core.deps import get_current_user
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import ChangePasswordRequest, LoginRequest, RecoverAdminRequest, TokenOut, UserOut
+from app.schemas.auth import ChangePasswordRequest, LoginAccountOut, LoginRequest, RecoverAdminRequest, TokenOut, UserOut
 from app.services import auth as auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.get("/login-accounts", response_model=list[LoginAccountOut])
+def login_accounts(db: Session = Depends(get_db)) -> list[LoginAccountOut]:
+    return auth_service.list_login_accounts(db)
 
 
 @router.post("/login", response_model=TokenOut)

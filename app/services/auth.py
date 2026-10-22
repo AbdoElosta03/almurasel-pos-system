@@ -11,7 +11,7 @@ from app.core.errors import api_error
 from app.core.config import settings
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.user import User
-from app.schemas.auth import ChangePasswordRequest, RecoverAdminRequest, TokenOut
+from app.schemas.auth import ChangePasswordRequest, LoginAccountOut, RecoverAdminRequest, TokenOut
 
 _recovery_attempts: dict[str, deque[float]] = defaultdict(deque)
 _recovery_lock = Lock()
@@ -32,6 +32,15 @@ def _check_recovery_limit(client_ip: str) -> None:
 def _record_failed_recovery(client_ip: str) -> None:
     with _recovery_lock:
         _recovery_attempts[client_ip].append(time.monotonic())
+
+
+def list_login_accounts(db: Session) -> list[LoginAccountOut]:
+    users = db.scalars(
+        select(User)
+        .where(User.is_active.is_(True))
+        .order_by(User.role.desc(), User.username.asc())
+    ).all()
+    return [LoginAccountOut(username=user.username, role=user.role) for user in users]
 
 
 def login(db: Session, username: str, password: str) -> TokenOut:

@@ -81,9 +81,9 @@ def test_cashier_invoice_details_only_for_own_open_shift(client, admin_headers, 
     assert client.get(url).status_code == 401
     assert client.get('/api/sales/my-open-shift/9999', headers=cashier_headers).status_code == 404
 
-    created = client.post('/api/users', headers=admin_headers, json={'username': 'cashier2', 'password': 'pass1234', 'role': 'cashier'})
+    created = client.post('/api/users', headers=admin_headers, json={'username': 'cashier2', 'password': '12345678', 'role': 'cashier'})
     assert created.status_code == 201, created.text
-    login = client.post('/api/auth/login', json={'username': 'cashier2', 'password': 'pass1234'})
+    login = client.post('/api/auth/login', json={'username': 'cashier2', 'password': '12345678'})
     other_headers = {'Authorization': f"Bearer {login.json()['access_token']}"}
     assert client.post('/api/shifts/open', headers=other_headers, json={'opening_cash_lyd': 0}).status_code == 201
     assert client.get(url, headers=other_headers).status_code == 404

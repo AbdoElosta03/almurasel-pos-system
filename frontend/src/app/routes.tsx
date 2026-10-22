@@ -10,6 +10,7 @@ import { PurchasesPage } from '../pages/admin/purchases/page'
 import { PurchaseCreatePage } from '../pages/admin/purchases/create/page'
 import { PurchaseDetailsPage } from '../pages/admin/purchases/details/page'
 import { ReportsPage } from '../pages/admin/reports/page'
+import { DailyClosingsPage } from '../pages/admin/daily-closings/page'
 import { AdminSaleDetailsPage } from '../pages/admin/reports/details/page'
 import { SettingsPage } from '../pages/admin/settings/page'
 import { DatabasePage } from '../pages/admin/settings/database/page'
@@ -37,6 +38,7 @@ export function AppRoutes() {
             <Route path="purchases/new" element={<PurchaseCreatePage />} />
             <Route path="purchases/:purchaseId" element={<PurchaseDetailsPage />} />
             <Route path="reports" element={<ReportsPage />} />
+            <Route path="daily-closings" element={<DailyClosingsPage />} />
             <Route path="reports/sales/:saleId" element={<AdminSaleDetailsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="settings/database" element={<DatabasePage />} />

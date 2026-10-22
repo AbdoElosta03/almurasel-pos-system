@@ -15,6 +15,8 @@ import {
 } from '../../../../components/ui/dialog'
 import { Input } from '../../../../components/ui/input'
 import { Label } from '../../../../components/ui/label'
+import { isValidPin } from '../../../../shared/lib/pinPolicy'
+import { NumericPinInput } from '../../../../shared/ui/NumericPinInput'
 
 export function ChangePasswordDialog({
   open,
@@ -27,8 +29,6 @@ export function ChangePasswordDialog({
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
-  const [showNewPassword, setShowNewPassword] = useState(false)
-  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -41,6 +41,10 @@ export function ChangePasswordDialog({
     setSuccess(false)
     if (newPassword !== confirmNewPassword) {
       setError('كلمتا المرور الجديدتان غير متطابقتين')
+      return
+    }
+    if (!isValidPin(newPassword)) {
+      setError('الرمز الجديد يجب أن يكون أرقامًا فقط (من 4 إلى 32 رقمًا)')
       return
     }
 
@@ -62,7 +66,7 @@ export function ChangePasswordDialog({
     }
   }
 
-  const isFormValid = currentPassword && newPassword.length >= 4 && confirmNewPassword.length >= 4
+  const isFormValid = currentPassword && isValidPin(newPassword) && newPassword === confirmNewPassword
 
   return (
     <Dialog open={open} onOpenChange={(next) => !busy && onOpenChange(next)}>
@@ -72,7 +76,7 @@ export function ChangePasswordDialog({
             <KeyRound className="size-6 text-primary" aria-hidden="true" />
             تغيير كلمة المرور
           </DialogTitle>
-          <DialogDescription>استخدم كلمة مرور جديدة لا تقل عن 4 أحرف.</DialogDescription>
+          <DialogDescription>الرمز الجديد أرقام فقط (من 4 إلى 32 رقمًا).</DialogDescription>
         </DialogHeader>
         <form className="flex flex-col gap-5" onSubmit={onSubmit}>
           <div className="flex flex-col gap-2">
@@ -100,51 +104,27 @@ export function ChangePasswordDialog({
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="new-password" className="text-base font-bold">كلمة المرور الجديدة</Label>
-            <div className="relative">
-              <Input
-                id="new-password"
-                type={showNewPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                minLength={4}
-                value={newPassword}
-                onChange={(event) => setNewPassword(event.target.value)}
-                disabled={busy}
-                className="h-14 rounded-2xl pl-12 text-lg"
-              />
-              <button
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute top-1/2 left-2 flex size-10 -translate-y-1/2 items-center justify-center rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground"
-                aria-label={showNewPassword ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'}
-              >
-                {showNewPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
-              </button>
-            </div>
+            <Label htmlFor="new-password" className="text-base font-bold">الرمز الجديد (أرقام)</Label>
+            <NumericPinInput
+              id="new-password"
+              autoComplete="new-password"
+              value={newPassword}
+              onChange={setNewPassword}
+              disabled={busy}
+              className="h-14 rounded-2xl text-lg"
+            />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="confirm-new-password" className="text-base font-bold">تأكيد كلمة المرور الجديدة</Label>
-            <div className="relative">
-              <Input
-                id="confirm-new-password"
-                type={showConfirmNewPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                minLength={4}
-                value={confirmNewPassword}
-                onChange={(event) => setConfirmNewPassword(event.target.value)}
-                disabled={busy}
-                className="h-14 rounded-2xl pl-12 text-lg"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
-                className="absolute top-1/2 left-2 flex size-10 -translate-y-1/2 items-center justify-center rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground"
-                aria-label={showConfirmNewPassword ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'}
-              >
-                {showConfirmNewPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
-              </button>
-            </div>
+            <Label htmlFor="confirm-new-password" className="text-base font-bold">تأكيد الرمز الجديد</Label>
+            <NumericPinInput
+              id="confirm-new-password"
+              autoComplete="new-password"
+              value={confirmNewPassword}
+              onChange={setConfirmNewPassword}
+              disabled={busy}
+              className="h-14 rounded-2xl text-lg"
+            />
           </div>
 
           {error ? <Alert>{error}</Alert> : null}

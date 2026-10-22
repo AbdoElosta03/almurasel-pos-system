@@ -4,9 +4,16 @@ export function shouldScrollTable(itemCount: number): boolean {
   return itemCount > TABLE_VISIBLE_ROW_COUNT
 }
 
-export function tableScrollContainerClass(itemCount: number): string {
+type TableScrollDensity = 'default' | 'comfortable'
+
+const SCROLL_MAX_HEIGHT: Record<TableScrollDensity, string> = {
+  default: 'max-h-[calc(3.5rem+5*5rem)]',
+  comfortable: 'max-h-[calc(3.5rem+5*6.5rem)]',
+}
+
+export function tableScrollContainerClass(itemCount: number, density: TableScrollDensity = 'default'): string {
   return shouldScrollTable(itemCount)
-    ? 'max-h-[calc(3.5rem+5*5rem)] overflow-auto overscroll-contain'
+    ? `${SCROLL_MAX_HEIGHT[density]} overflow-auto overscroll-contain`
     : 'overflow-x-auto overscroll-contain'
 }
 

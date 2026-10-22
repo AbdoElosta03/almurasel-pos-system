@@ -22,7 +22,7 @@ export function CurrentShiftPanel({ shift }: { shift: Shift }) {
       </div>
       <div className="grid gap-4 p-5 sm:grid-cols-2 sm:p-6">
         <div className="rounded-xl border border-border bg-background p-4">
-          <p className="flex items-center gap-2 text-sm text-muted-foreground"><Banknote className="size-4" aria-hidden="true" /> نقدية الفتح</p>
+          <p className="flex items-center gap-2 text-sm text-muted-foreground"><Banknote className="size-4" aria-hidden="true" /> المبلغ في الدرج قبل البيع</p>
           <p className="mt-2 text-xl font-extrabold text-primary">{formatLyd(shift.opening_cash_lyd)}</p>
         </div>
         <div className="rounded-xl border border-border bg-background p-4">

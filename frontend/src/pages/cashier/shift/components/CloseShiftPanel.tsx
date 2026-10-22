@@ -43,7 +43,7 @@ export function CloseShiftPanel({
         <p className="mt-2 text-sm text-muted-foreground">عدّ النقدية الموجودة في الصندوق وأدخل المبلغ النهائي.</p>
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="closing-cash" className="font-bold">نقدية الإقفال (د.ل)</Label>
+        <Label htmlFor="closing-cash" className="font-bold">المبلغ الموجود في الدرج عند الإغلاق (د.ل)</Label>
         <div className="relative">
           <Input
             id="closing-cash"
