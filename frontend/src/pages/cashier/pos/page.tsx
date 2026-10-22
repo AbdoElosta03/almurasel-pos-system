@@ -7,9 +7,12 @@ import * as categoriesApi from '../../../api/categories'
 import * as productsApi from '../../../api/products'
 import * as salesApi from '../../../api/sales'
 import * as shiftsApi from '../../../api/shifts'
+import { useAuth } from '../../../context/AuthContext'
 import type { Category, PaymentMethod, Product } from '../../../types'
 import { formatLyd, lineTotalLyd } from '../../../utils/money'
 import { playPaymentSuccessSound, preparePaymentSound } from '../../../utils/paymentSound'
+import { printSaleReceipt } from '../../../utils/receiptPrint'
+import { isReceiptPrintingEnabled } from '../../../utils/receiptSettings'
 import { Alert } from '../../../shared/ui/Alert'
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog'
 import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
@@ -25,6 +28,7 @@ import { CategoryFilter } from './components/CategoryFilter'
 import { ProductGrid } from './components/ProductGrid'
 
 export function PosPage() {
+  const { user } = useAuth()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [hasShift, setHasShift] = useState<boolean | null>(null)
@@ -113,7 +117,7 @@ export function PosPage() {
     setToast({ tone: 'loading', text: 'جاري حفظ الفاتورة...' })
     setCheckoutError(null)
     try {
-      await salesApi.createSale({
+      const sale = await salesApi.createSale({
         payment_method,
         items: lines.map((line) => ({ product_id: line.product.id, qty: line.qty })),
       })
@@ -121,6 +125,9 @@ export function PosPage() {
       setLines([])
       setCartOpen(false)
       setToast({ tone: 'success', text: 'تم إنشاء الفاتورة بنجاح' })
+      if (isReceiptPrintingEnabled()) {
+        printSaleReceipt(sale, user?.username)
+      }
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'تعذر إتمام البيع'
       setCheckoutError(message)

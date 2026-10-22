@@ -5,6 +5,7 @@ import { ApiError } from '../../../api/errors'
 import * as categoriesApi from '../../../api/categories'
 import * as productsApi from '../../../api/products'
 import type { Category, Product } from '../../../types'
+import { formatLyd } from '../../../utils/money'
 import type { PaginatedResult } from '../../../types/common'
 import { Alert } from '../../../shared/ui/Alert'
 import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
@@ -99,6 +100,12 @@ export function ProductsPage() {
             const text = err instanceof ApiError ? err.message : 'تعذر إزالة صورة المنتج'
             setToast({ tone: 'error', text })
           }
+        }}
+        onUpdatePrice={async (product, price_lyd) => {
+          const updated = await productsApi.updateProduct(product.id, { price_lyd })
+          setProducts((current) => current.map((item) => (item.id === updated.id ? updated : item)))
+          setToast({ tone: 'success', text: `تم تحديث سعر «${product.name}» إلى ${formatLyd(price_lyd)}` })
+          return updated
         }}
         onDelete={async (product) => {
           try {

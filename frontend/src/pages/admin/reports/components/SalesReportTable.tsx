@@ -3,6 +3,7 @@ import { formatLyd } from '../../../../utils/money'
 import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
+import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../../shared/lib/tableScroll'
 
 function formatWhen(value: string) {
   return new Date(value).toLocaleString('ar-LY', {
@@ -24,6 +25,8 @@ export function SalesReportTable({
   onViewSale: (saleId: number) => void
 }) {
   const pages = Math.max(1, Math.ceil(report.total / report.page_size))
+  const itemCount = report.items.length
+  const stickyHead = tableHeadCellStickyClass(itemCount)
 
   if (report.items.length === 0) {
     return (
@@ -35,17 +38,17 @@ export function SalesReportTable({
 
   return (
     <>
-        <Table className="min-w-[1050px]">
-          <TableHeader className="bg-secondary/60">
+        <Table className="min-w-[1050px]" containerClassName={tableScrollContainerClass(itemCount)}>
+          <TableHeader className={tableHeaderRowClass(itemCount, true)}>
             <TableRow className="hover:bg-secondary/60">
-              <TableHead>رقم الفاتورة</TableHead>
-              <TableHead>التاريخ والوقت</TableHead>
-              <TableHead>المستخدم</TableHead>
-              <TableHead>الوردية</TableHead>
-              <TableHead>طريقة الدفع</TableHead>
-              <TableHead>المبلغ</TableHead>
-              <TableHead>الحالة</TableHead>
-              <TableHead>تفاصيل الإلغاء</TableHead>
+              <TableHead className={stickyHead}>رقم الفاتورة</TableHead>
+              <TableHead className={stickyHead}>التاريخ والوقت</TableHead>
+              <TableHead className={stickyHead}>المستخدم</TableHead>
+              <TableHead className={stickyHead}>الوردية</TableHead>
+              <TableHead className={stickyHead}>طريقة الدفع</TableHead>
+              <TableHead className={stickyHead}>المبلغ</TableHead>
+              <TableHead className={stickyHead}>الحالة</TableHead>
+              <TableHead className={stickyHead}>تفاصيل الإلغاء</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

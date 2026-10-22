@@ -14,6 +14,7 @@ import { Card } from '../../../shared/ui/Card'
 import { PageHeader } from '../../../shared/ui/PageHeader'
 import { Badge } from '../../../components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table'
+import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../shared/lib/tableScroll'
 
 const PAGE_SIZE = 10
 
@@ -110,15 +111,15 @@ export function CashierInvoicesPage() {
       ) : null}
       {!loading && report && report.items.length > 0 ? (
         <Card className="overflow-hidden p-0">
-          <Table className="min-w-[730px]">
-            <TableHeader className="bg-secondary/60">
+          <Table
+            className="min-w-[730px]"
+            containerClassName={tableScrollContainerClass(report.items.length)}
+          >
+            <TableHeader className={tableHeaderRowClass(report.items.length, true)}>
               <TableRow className="hover:bg-secondary/60">
-                <TableHead>رقم الفاتورة</TableHead>
-                <TableHead>الوقت</TableHead>
-                <TableHead>طريقة الدفع</TableHead>
-                <TableHead>الأصناف</TableHead>
-                <TableHead>الإجمالي</TableHead>
-                <TableHead>الحالة</TableHead>
+                {['رقم الفاتورة', 'الوقت', 'طريقة الدفع', 'الأصناف', 'الإجمالي', 'الحالة'].map((label) => (
+                  <TableHead key={label} className={tableHeadCellStickyClass(report.items.length)}>{label}</TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>

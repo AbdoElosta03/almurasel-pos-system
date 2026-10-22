@@ -6,6 +6,7 @@ import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Card } from '../../../../components/ui/card'
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog'
+import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../../shared/lib/tableScroll'
 
 export function UserList({
   users,
@@ -59,18 +60,22 @@ export function UserList({
   }
 
   const isActionBusy = togglingId !== null || deleting
+  const itemCount = users.length
 
   return (
     <Card className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_12px_40px_-24px_rgba(18,83,78,0.12)]">
-      <div className="overflow-x-auto overscroll-contain">
+      <div className={tableScrollContainerClass(itemCount)}>
         <table className="w-full border-collapse text-right select-none">
           <thead>
-            <tr className="h-14 border-b border-border bg-secondary/50 text-base font-bold text-muted-foreground">
-              <th className="px-6 py-3 font-extrabold text-foreground">#</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">المستخدم</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">الصلاحية (الدور)</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">الحالة</th>
-              <th className="px-6 py-3 text-center font-extrabold text-foreground">الإجراءات</th>
+            <tr className={`h-14 border-b border-border text-base font-bold text-muted-foreground ${tableHeaderRowClass(itemCount)}`}>
+              {['#', 'المستخدم', 'الصلاحية (الدور)', 'الحالة', 'الإجراءات'].map((label) => (
+                <th
+                  key={label}
+                  className={`px-6 py-3 font-extrabold text-foreground ${label === 'الإجراءات' ? 'text-center' : ''} ${tableHeadCellStickyClass(itemCount)}`}
+                >
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60 text-lg">

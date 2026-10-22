@@ -1,15 +1,19 @@
-import { useState } from 'react'
-import { Folder, ImageOff, ImagePlus, Layers3, Tag, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { CircleDollarSign, Folder, ImageOff, ImagePlus, Layers3, Tag, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react'
 
+import { ApiError } from '../../../../api/errors'
 import type { Category, Product } from '../../../../types'
-import { formatLyd } from '../../../../utils/money'
+import { formatLyd, parseLydInput, toLydNumber } from '../../../../utils/money'
 import { productDisplayImage } from '../../../../utils/productImage'
 import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Card } from '../../../../components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../../components/ui/dialog'
+import { Input } from '../../../../components/ui/input'
+import { Label } from '../../../../components/ui/label'
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog'
 import { Pagination } from '../../../../shared/ui/Pagination'
+import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../../shared/lib/tableScroll'
 
 export function ProductList({
   products,
@@ -22,6 +26,7 @@ export function ProductList({
   onToggle,
   onImage,
   onRemoveImage,
+  onUpdatePrice,
   onDelete,
 }: {
   products: Product[]
@@ -34,12 +39,22 @@ export function ProductList({
   onToggle: (product: Product) => Promise<void>
   onImage: (product: Product, image: File) => Promise<void>
   onRemoveImage: (product: Product) => Promise<void>
+  onUpdatePrice: (product: Product, price_lyd: number) => Promise<Product>
   onDelete: (product: Product) => Promise<void>
 }) {
   const [selected, setSelected] = useState<Product | null>(null)
   const [pendingDelete, setPendingDelete] = useState<Product | null>(null)
-  const [busyAction, setBusyAction] = useState<'toggle' | 'image' | 'remove-image' | null>(null)
+  const [busyAction, setBusyAction] = useState<'toggle' | 'image' | 'remove-image' | 'price' | null>(null)
+  const [priceDraft, setPriceDraft] = useState('')
+  const [priceError, setPriceError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    if (selected) {
+      setPriceDraft(String(toLydNumber(selected.price_lyd)))
+      setPriceError(null)
+    }
+  }, [selected])
 
   if (products.length === 0) {
     return (
@@ -58,12 +73,35 @@ export function ProductList({
   const categoryMap = new Map(categories.map((category) => [category.id, category.name]))
   const categoryName = selected ? categoryMap.get(selected.category_id) ?? 'غير مصنف' : ''
   const isBusy = busyAction !== null
+  const itemCount = products.length
 
   const runAction = async (action: 'toggle' | 'image' | 'remove-image', callback: () => Promise<void>) => {
     setBusyAction(action)
     try {
       await callback()
       setSelected(null)
+    } finally {
+      setBusyAction(null)
+    }
+  }
+
+  const savePrice = async () => {
+    if (!selected || busyAction !== null) return
+    setPriceError(null)
+    let price_lyd: number
+    try {
+      price_lyd = parseLydInput(priceDraft)
+    } catch {
+      setPriceError('أدخل سعراً صالحاً بالدينار')
+      return
+    }
+    if (price_lyd === toLydNumber(selected.price_lyd)) return
+
+    setBusyAction('price')
+    try {
+      setSelected(await onUpdatePrice(selected, price_lyd))
+    } catch (err) {
+      setPriceError(err instanceof ApiError ? err.message : 'تعذر تحديث السعر')
     } finally {
       setBusyAction(null)
     }
@@ -82,15 +120,13 @@ export function ProductList({
 
   return (
     <Card className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_12px_40px_-24px_rgba(18,83,78,0.12)]">
-      <div className="overflow-x-auto overscroll-contain">
+      <div className={tableScrollContainerClass(itemCount)}>
         <table className="w-full select-none border-collapse text-right">
           <thead>
-            <tr className="h-14 border-b border-border bg-secondary/50 text-base font-bold text-muted-foreground">
-              <th className="px-6 py-3 font-extrabold text-foreground">#</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">المنتج</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">التصنيف</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">السعر</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">الحالة</th>
+            <tr className={`h-14 border-b border-border text-base font-bold text-muted-foreground ${tableHeaderRowClass(itemCount)}`}>
+              {['#', 'المنتج', 'التصنيف', 'السعر', 'الحالة'].map((label) => (
+                <th key={label} className={`px-6 py-3 font-extrabold text-foreground ${tableHeadCellStickyClass(itemCount)}`}>{label}</th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60 text-lg">
@@ -150,8 +186,39 @@ export function ProductList({
                 <div className="min-w-0">
                   <h3 className="break-words text-xl font-extrabold">{selected.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{categoryName}</p>
-                  <p className="mt-2 text-lg font-extrabold text-primary">{formatLyd(selected.price_lyd)}</p>
                 </div>
+              </div>
+
+              <div className="space-y-2 border-t border-border pt-4">
+                <Label htmlFor="product-edit-price" className="text-base font-bold">السعر (د.ل)</Label>
+                <div className="flex gap-2">
+                  <div className="relative min-w-0 flex-1">
+                    <Input
+                      id="product-edit-price"
+                      inputMode="decimal"
+                      value={priceDraft}
+                      disabled={isBusy}
+                      onChange={(event) => {
+                        setPriceDraft(event.target.value)
+                        setPriceError(null)
+                      }}
+                      className="h-12 pr-10"
+                    />
+                    <CircleDollarSign className="pointer-events-none absolute top-1/2 right-3 size-5 -translate-y-1/2 text-muted-foreground" />
+                  </div>
+                  <Button
+                    type="button"
+                    disabled={isBusy}
+                    onClick={() => void savePrice()}
+                    className="h-12 shrink-0 px-4"
+                  >
+                    {busyAction === 'price' ? 'جاري الحفظ...' : 'حفظ السعر'}
+                  </Button>
+                </div>
+                {priceError ? <p className="text-sm font-semibold text-destructive">{priceError}</p> : null}
+                <p className="text-xs text-muted-foreground">
+                  السعر الحالي في نقطة البيع: <strong>{formatLyd(selected.price_lyd)}</strong>. الفواتير السابقة لا تتغير.
+                </p>
               </div>
 
               <div className="grid gap-2 border-t border-border pt-4">

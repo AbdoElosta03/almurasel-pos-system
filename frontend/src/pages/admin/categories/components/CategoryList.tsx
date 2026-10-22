@@ -7,6 +7,7 @@ import { Button } from '../../../../components/ui/button'
 import { Card } from '../../../../components/ui/card'
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog'
 import { Pagination } from '../../../../shared/ui/Pagination'
+import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../../shared/lib/tableScroll'
 
 export function CategoryList({
   categories,
@@ -68,17 +69,22 @@ export function CategoryList({
   }
 
   const isActionBusy = togglingId !== null || deleting
+  const itemCount = categories.length
 
   return (
     <Card className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_12px_40px_-24px_rgba(18,83,78,0.12)]">
-      <div className="overflow-x-auto overscroll-contain">
+      <div className={tableScrollContainerClass(itemCount)}>
         <table className="w-full border-collapse text-right select-none">
           <thead>
-            <tr className="h-14 border-b border-border bg-secondary/50 text-base font-bold text-muted-foreground">
-              <th className="px-6 py-3 font-extrabold text-foreground">#</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">التصنيف</th>
-              <th className="px-6 py-3 font-extrabold text-foreground">الحالة</th>
-              <th className="px-6 py-3 text-center font-extrabold text-foreground">الإجراءات</th>
+            <tr className={`h-14 border-b border-border text-base font-bold text-muted-foreground ${tableHeaderRowClass(itemCount)}`}>
+              {['#', 'التصنيف', 'الحالة', 'الإجراءات'].map((label) => (
+                <th
+                  key={label}
+                  className={`px-6 py-3 font-extrabold text-foreground ${label === 'الإجراءات' ? 'text-center' : ''} ${tableHeadCellStickyClass(itemCount)}`}
+                >
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60 text-lg">
