@@ -5,6 +5,7 @@ import { ArrowLeft, Clock3, ShoppingCart } from 'lucide-react'
 import { ApiError } from '../../../api/errors'
 import * as shiftsApi from '../../../api/shifts'
 import type { Shift } from '../../../types'
+import { formatLibyaDateTime, isOpenedOnPreviousLibyaDay } from '../../../utils/datetime'
 import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
 import { Alert } from '../../../shared/ui/Alert'
@@ -41,6 +42,8 @@ export function ShiftPage() {
     return <LoadingBlock />
   }
 
+  const staleShift = shift !== null && isOpenedOnPreviousLibyaDay(shift.opened_at)
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-5">
       <div className="border-b border-border/60 pb-3">
@@ -50,21 +53,29 @@ export function ShiftPage() {
       {shift ? (
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(19rem,0.8fr)]">
           <div className="space-y-4">
+            {staleShift ? (
+              <Alert>
+                وردية من يوم سابق ما زالت مفتوحة (فُتحت في {formatLibyaDateTime(shift.opened_at)}).
+                أقفلها بعد عدّ الدرج قبل البيع أو فتح وردية جديدة.
+              </Alert>
+            ) : null}
             <CurrentShiftPanel shift={shift} />
-            <Card className="flex items-center justify-between gap-4 p-4 sm:p-5">
-              <div className="flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-xl bg-secondary text-primary">
-                  <ShoppingCart className="size-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <h3 className="font-bold">جاهز للبيع؟</h3>
-                  <p className="text-sm text-muted-foreground">ابدأ تسجيل الطلبات خلال هذه الوردية.</p>
+            {!staleShift ? (
+              <Card className="flex items-center justify-between gap-4 p-4 sm:p-5">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-11 items-center justify-center rounded-xl bg-secondary text-primary">
+                    <ShoppingCart className="size-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h3 className="font-bold">جاهز للبيع؟</h3>
+                    <p className="text-sm text-muted-foreground">ابدأ تسجيل الطلبات خلال هذه الوردية.</p>
+                  </div>
                 </div>
-              </div>
-              <Button asChild className="shrink-0">
-                <Link to="/cashier/pos">نقطة البيع <ArrowLeft className="size-4" /></Link>
-              </Button>
-            </Card>
+                <Button asChild className="shrink-0">
+                  <Link to="/cashier/pos">نقطة البيع <ArrowLeft className="size-4" /></Link>
+                </Button>
+              </Card>
+            ) : null}
           </div>
           <Card className="p-5 sm:p-6">
             <CloseShiftPanel

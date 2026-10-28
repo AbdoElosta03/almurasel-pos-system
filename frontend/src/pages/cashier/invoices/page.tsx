@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import * as salesApi from '../../../api/sales'
 import { ApiError } from '../../../api/errors'
 import type { SalePage } from '../../../types'
+import { formatLibyaDateTime } from '../../../utils/datetime'
 import { formatLyd } from '../../../utils/money'
 import { Alert } from '../../../shared/ui/Alert'
 import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
@@ -17,15 +18,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../shared/lib/tableScroll'
 
 const PAGE_SIZE = 10
-
-function formatWhen(value: string) {
-  return new Date(value).toLocaleString('ar-LY', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 function InvoiceLink({ saleId, children }: { saleId: number; children: ReactNode }) {
   return (
@@ -131,7 +123,7 @@ export function CashierInvoicesPage() {
                     className={cancelled ? 'bg-red-50/50 hover:bg-red-50' : ''}
                   >
                     <TableCell className="font-extrabold"><InvoiceLink saleId={sale.id}>#{sale.id}</InvoiceLink></TableCell>
-                    <TableCell className="text-muted-foreground"><InvoiceLink saleId={sale.id}>{formatWhen(sale.created_at)}</InvoiceLink></TableCell>
+                    <TableCell className="text-muted-foreground"><InvoiceLink saleId={sale.id}>{formatLibyaDateTime(sale.created_at)}</InvoiceLink></TableCell>
                     <TableCell><InvoiceLink saleId={sale.id}>{sale.payment_method === 'cash' ? 'نقدي' : 'بطاقة مصرفية'}</InvoiceLink></TableCell>
                     <TableCell><InvoiceLink saleId={sale.id}>{sale.item_count}</InvoiceLink></TableCell>
                     <TableCell className="font-extrabold"><InvoiceLink saleId={sale.id}>{formatLyd(sale.total_lyd)}</InvoiceLink></TableCell>

@@ -1,3 +1,25 @@
+from datetime import timedelta
+
+from app.models.shift import Shift
+from app.utils.time import utc_now
+
+
+def test_sale_blocked_when_shift_from_previous_day(client, cashier_headers, product, session_factory):
+    opened = client.post("/api/shifts/open", headers=cashier_headers, json={"opening_cash_lyd": 0})
+    assert opened.status_code == 201, opened.text
+    with session_factory() as db:
+        shift = db.get(Shift, opened.json()["id"])
+        shift.opened_at = utc_now() - timedelta(days=1)
+        db.commit()
+    denied = client.post(
+        "/api/sales",
+        headers=cashier_headers,
+        json={"payment_method": "cash", "items": [{"product_id": product["id"], "qty": 1}]},
+    )
+    assert denied.status_code == 409, denied.text
+    assert denied.json()["code"] == "shift_from_previous_day"
+
+
 def test_sale_total_uses_server_price(client, admin_headers, cashier_headers, product):
     extra = client.post(
         "/api/products",

@@ -5,6 +5,7 @@ import { Ban } from 'lucide-react'
 import * as salesApi from '../../../../api/sales'
 import { ApiError } from '../../../../api/errors'
 import type { Sale } from '../../../../types'
+import { formatLibyaDateTime } from '../../../../utils/datetime'
 import { formatLyd } from '../../../../utils/money'
 import { Alert } from '../../../../shared/ui/Alert'
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog'
@@ -13,12 +14,6 @@ import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Card } from '../../../../components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
-
-function formatWhen(value: string) {
-  return new Date(value).toLocaleString('ar-LY', {
-    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-  })
-}
 
 export function CashierInvoiceDetailsPage() {
   const { saleId } = useParams()
@@ -77,10 +72,10 @@ export function CashierInvoiceDetailsPage() {
       {!loading && sale ? (
         <>
           <Card className="grid gap-4 p-5 sm:grid-cols-2">
-            <p>التاريخ: <strong>{formatWhen(sale.created_at)}</strong></p>
+            <p>التاريخ: <strong>{formatLibyaDateTime(sale.created_at)}</strong></p>
             <p>طريقة الدفع: <strong>{sale.payment_method === 'cash' ? 'نقدي' : 'بطاقة مصرفية'}</strong></p>
             <p>الحالة: <Badge variant={sale.status === 'cancelled' ? 'destructive' : 'default'}>{sale.status === 'cancelled' ? 'ملغاة' : 'مكتملة'}</Badge></p>
-            {sale.cancelled_at ? <p>وقت الإلغاء: <strong>{formatWhen(sale.cancelled_at)}</strong></p> : null}
+            {sale.cancelled_at ? <p>وقت الإلغاء: <strong>{formatLibyaDateTime(sale.cancelled_at)}</strong></p> : null}
           </Card>
           <Card className="overflow-hidden p-0">
             <Table className="min-w-[650px]">

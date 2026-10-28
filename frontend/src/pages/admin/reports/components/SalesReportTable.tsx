@@ -1,19 +1,10 @@
 import type { SalesReport } from '../../../../types'
+import { formatLibyaDateTime } from '../../../../utils/datetime'
 import { formatLyd } from '../../../../utils/money'
 import { Badge } from '../../../../components/ui/badge'
 import { Button } from '../../../../components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
 import { tableHeadCellStickyClass, tableHeaderRowClass, tableScrollContainerClass } from '../../../../shared/lib/tableScroll'
-
-function formatWhen(value: string) {
-  return new Date(value).toLocaleString('ar-LY', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 export function SalesReportTable({
   report,
@@ -70,7 +61,7 @@ export function SalesReportTable({
                   className={`cursor-pointer focus-visible:outline-2 focus-visible:outline-primary ${cancelled ? 'bg-red-50/50 hover:bg-red-50' : ''}`}
                 >
                   <TableCell className="text-lg font-extrabold text-foreground">#{sale.id}</TableCell>
-                  <TableCell className="text-muted-foreground">{formatWhen(sale.created_at)}</TableCell>
+                  <TableCell className="text-muted-foreground">{formatLibyaDateTime(sale.created_at)}</TableCell>
                   <TableCell className="font-bold text-foreground">{sale.cashier_username}</TableCell>
                   <TableCell className="text-muted-foreground">#{sale.shift_id}</TableCell>
                   <TableCell>{sale.payment_method === 'cash' ? 'نقدي' : 'بطاقة مصرفية'}</TableCell>
@@ -82,7 +73,7 @@ export function SalesReportTable({
                   </TableCell>
                   <TableCell className={cancelled ? 'text-red-700' : 'text-muted-foreground'}>
                     {cancelled
-                      ? `${sale.cancelled_by_username ?? '—'} · ${sale.cancelled_at ? formatWhen(sale.cancelled_at) : '—'}`
+                      ? `${sale.cancelled_by_username ?? '—'} · ${sale.cancelled_at ? formatLibyaDateTime(sale.cancelled_at) : '—'}`
                       : '—'}
                   </TableCell>
                 </TableRow>

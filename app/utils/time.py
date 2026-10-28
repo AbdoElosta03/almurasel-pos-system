@@ -8,6 +8,23 @@ def utc_now() -> datetime:
     return datetime.now(UTC).replace(tzinfo=None)
 
 
+def as_utc(moment: datetime) -> datetime:
+    if moment.tzinfo is None:
+        return moment.replace(tzinfo=UTC)
+    return moment.astimezone(UTC)
+
+
+def local_calendar_date(moment: datetime, timezone_name: str) -> date:
+    return as_utc(moment).astimezone(ZoneInfo(timezone_name)).date()
+
+
+def is_previous_local_day(moment: datetime, timezone_name: str, now: datetime | None = None) -> bool:
+    """True when moment's local calendar day is before today's local day."""
+    tz = ZoneInfo(timezone_name)
+    current = datetime.now(tz) if now is None else as_utc(now).astimezone(tz)
+    return local_calendar_date(moment, timezone_name) < current.date()
+
+
 def period_bounds(period: str, timezone_name: str, moment: datetime | None = None) -> tuple[datetime, datetime]:
     """Return a half-open UTC range. Weeks start on Saturday in timezone_name."""
     tz = ZoneInfo(timezone_name)

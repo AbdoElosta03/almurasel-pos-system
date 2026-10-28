@@ -1,22 +1,51 @@
+import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
+import * as shiftsApi from '../../api/shifts'
+import { ApiError } from '../../api/errors'
 import { useAuth } from '../../context/AuthContext'
 import { Button } from '../../components/ui/button'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { Icon } from '../ui/Icon'
 import { cn } from '../lib/cn'
 import logoLight from '../../assets/logo-light.png'
 
 export function AppShell({ title, home, children }: { title: string; home: string; children: ReactNode }) {
-  const { user, logout } = useAuth()
+  const { user, role, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const isHome = location.pathname === home || location.pathname === `${home}/`
   const isPos = location.pathname === '/cashier/pos'
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
+  const [logoutChecking, setLogoutChecking] = useState(false)
 
-  const onLogout = () => {
+  const finishLogout = () => {
+    setLogoutConfirmOpen(false)
     logout()
     navigate('/login')
+  }
+
+  const onLogout = () => {
+    if (role !== 'cashier') {
+      finishLogout()
+      return
+    }
+    setLogoutChecking(true)
+    void shiftsApi.currentShift()
+      .then(() => {
+        setLogoutConfirmOpen(true)
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 404 && err.code === 'no_open_shift') {
+          finishLogout()
+          return
+        }
+        finishLogout()
+      })
+      .finally(() => {
+        setLogoutChecking(false)
+      })
   }
 
   const goBack = () => {
@@ -66,7 +95,7 @@ export function AppShell({ title, home, children }: { title: string; home: strin
             )}
             <span className="hidden h-10 w-px bg-border sm:block" />
             <span className="hidden text-sm font-semibold text-foreground sm:block">{user?.username}</span>
-            <Button variant="ghost" onClick={onLogout}>
+            <Button variant="ghost" onClick={onLogout} disabled={logoutChecking}>
               <Icon name="logout" className="size-5" /> خروج
             </Button>
           </div>
@@ -74,6 +103,16 @@ export function AppShell({ title, home, children }: { title: string; home: strin
       </header>
       <main className={cn('mx-auto flex w-full max-w-[1600px] flex-1 flex-col p-4 sm:p-6', isPos && 'lg:h-[calc(100dvh-4rem)] lg:min-h-0 lg:flex-none lg:overflow-hidden lg:px-5 lg:py-3')}>{children}</main>
       {backButton}
+      <ConfirmDialog
+        open={logoutConfirmOpen}
+        title="الوردية لا تزال مفتوحة"
+        description="الوردية لا تزال مفتوحة. هل تريد تسجيل الخروج؟"
+        confirmLabel="نعم، تسجيل الخروج"
+        cancelLabel="رجوع"
+        confirmVariant="destructive"
+        onConfirm={finishLogout}
+        onClose={() => setLogoutConfirmOpen(false)}
+      />
     </div>
   )
 }

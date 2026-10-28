@@ -1,4 +1,5 @@
 import type { Sale } from '../types'
+import { formatLibyaDateTime } from './datetime'
 import { formatLyd } from './money'
 
 const RECEIPT_WIDTH_MM = 80
@@ -9,16 +10,6 @@ function escapeHtml(value: string): string {
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
-}
-
-function formatWhen(value: string): string {
-  return new Date(value).toLocaleString('ar-LY', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 function receiptHtml(sale: Sale, cashierName?: string): string {
@@ -70,7 +61,7 @@ function receiptHtml(sale: Sale, cashierName?: string): string {
   <hr />
   <div class="meta">
     <p>رقم الفاتورة: ${sale.id}</p>
-    <p>التاريخ: ${escapeHtml(formatWhen(sale.created_at))}</p>
+    <p>التاريخ: ${escapeHtml(formatLibyaDateTime(sale.created_at))}</p>
     ${cashier}
     <p>طريقة الدفع: ${payment}</p>
   </div>

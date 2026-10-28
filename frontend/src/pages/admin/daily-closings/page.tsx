@@ -4,6 +4,7 @@ import { Scale } from 'lucide-react'
 import * as dailyClosingsApi from '../../../api/dailyClosings'
 import { ApiError } from '../../../api/errors'
 import type { DailyClosing, DailyClosingResult } from '../../../types'
+import { formatLibyaDateTime } from '../../../utils/datetime'
 import { formatLyd, parseLydInput } from '../../../utils/money'
 import { Alert } from '../../../shared/ui/Alert'
 import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
@@ -32,14 +33,6 @@ function todayValue() {
   const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
   return `${now.getFullYear()}-${month}-${day}`
-}
-
-function formatTime(value: string | null) {
-  if (!value) return '—'
-  return new Date(value).toLocaleTimeString('ar-LY', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 function resultText(row: DailyClosing) {
@@ -161,8 +154,8 @@ export function DailyClosingsPage() {
               {rows.map((row) => (
                 <TableRow key={row.shift_id}>
                   <TableCell className="font-extrabold">{row.cashier_username}</TableCell>
-                  <TableCell>{formatTime(row.opened_at)}</TableCell>
-                  <TableCell>{formatTime(row.closed_at)}</TableCell>
+                  <TableCell>{formatLibyaDateTime(row.opened_at)}</TableCell>
+                  <TableCell>{formatLibyaDateTime(row.closed_at)}</TableCell>
                   <TableCell>{formatLyd(row.opening_cash_lyd)}</TableCell>
                   <TableCell>{row.closing_cash_lyd === null ? '—' : formatLyd(row.closing_cash_lyd)}</TableCell>
                   <TableCell>

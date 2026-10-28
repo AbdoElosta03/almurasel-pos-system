@@ -2,6 +2,7 @@ from fastapi import status
 from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session, lazyload
 
+from app.core.config import settings
 from app.core.errors import api_error
 
 from app.models.audit_log import AuditLog
@@ -13,7 +14,7 @@ from app.schemas.sale import OpenShiftSalesSummary, SaleCreate, SalePage
 from app.utils.money import dirhams_to_lyd
 from app.services.shifts import _open_shift
 from app.utils.money import line_total
-from app.utils.time import utc_now
+from app.utils.time import is_previous_local_day, utc_now
 
 
 def _write_audit(db: Session, actor_id: int, action: str, sale_id: int) -> None:
@@ -31,6 +32,12 @@ def create_sale(db: Session, user: User, body: SaleCreate) -> Sale:
     shift = _open_shift(db, user.id)
     if shift is None:
         raise api_error(status.HTTP_400_BAD_REQUEST, "no_open_shift", "No open shift")
+    if is_previous_local_day(shift.opened_at, settings.timezone):
+        raise api_error(
+            status.HTTP_409_CONFLICT,
+            "shift_from_previous_day",
+            "Close yesterday's shift before selling",
+        )
     sale = Sale(
         shift_id=shift.id,
         cashier_id=user.id,

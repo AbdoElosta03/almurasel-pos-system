@@ -1,4 +1,5 @@
 import type { Shift } from '../../../../types'
+import { formatLibyaDateTime } from '../../../../utils/datetime'
 import { formatLyd } from '../../../../utils/money'
 import { Banknote, CalendarClock, Clock3 } from 'lucide-react'
 import { Card } from '../../../../components/ui/card'
@@ -27,7 +28,7 @@ export function CurrentShiftPanel({ shift }: { shift: Shift }) {
         </div>
         <div className="rounded-xl border border-border bg-background p-4">
           <p className="flex items-center gap-2 text-sm text-muted-foreground"><CalendarClock className="size-4" aria-hidden="true" /> وقت الفتح</p>
-          <p className="mt-2 text-base font-bold">{new Date(shift.opened_at).toLocaleString('ar-LY', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+          <p className="mt-2 text-base font-bold">{formatLibyaDateTime(shift.opened_at)}</p>
         </div>
       </div>
     </Card>

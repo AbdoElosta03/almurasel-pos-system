@@ -3,16 +3,11 @@ import { useEffect, useState } from 'react'
 import { ApiError } from '../../../../api/errors'
 import * as reportsApi from '../../../../api/reports'
 import type { SaleDetail } from '../../../../types'
+import { formatLibyaDateTime } from '../../../../utils/datetime'
 import { formatLyd } from '../../../../utils/money'
 import { Alert } from '../../../../shared/ui/Alert'
 import { Badge } from '../../../../components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../../components/ui/dialog'
-
-function formatWhen(value: string) {
-  return new Date(value).toLocaleString('ar-LY', {
-    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-  })
-}
 
 export function SaleDetailsDialog({ saleId, onClose }: { saleId: number | null; onClose: () => void }) {
   const [sale, setSale] = useState<SaleDetail | null>(null)
@@ -38,12 +33,12 @@ export function SaleDetailsDialog({ saleId, onClose }: { saleId: number | null; 
         {sale && sale.id === saleId ? (
           <div className="space-y-5">
             <div className="grid gap-3 rounded-xl bg-secondary/50 p-4 text-sm sm:grid-cols-2">
-              <p>التاريخ: <strong>{formatWhen(sale.created_at)}</strong></p>
+              <p>التاريخ: <strong>{formatLibyaDateTime(sale.created_at)}</strong></p>
               <p>الكاشير: <strong>{sale.cashier_username}</strong></p>
               <p>الوردية: <strong>#{sale.shift_id}</strong></p>
               <p>طريقة الدفع: <strong>{sale.payment_method === 'cash' ? 'نقدي' : 'بطاقة مصرفية'}</strong></p>
               <p>الحالة: <Badge variant={sale.status === 'cancelled' ? 'destructive' : 'default'}>{sale.status === 'cancelled' ? 'ملغاة' : 'مكتملة'}</Badge></p>
-              {sale.cancelled_at ? <p>الإلغاء: <strong>{sale.cancelled_by_username ?? '—'} · {formatWhen(sale.cancelled_at)}</strong></p> : null}
+              {sale.cancelled_at ? <p>الإلغاء: <strong>{sale.cancelled_by_username ?? '—'} · {formatLibyaDateTime(sale.cancelled_at)}</strong></p> : null}
             </div>
             <div className="max-h-[40vh] overflow-auto rounded-xl border border-border sm:max-h-[45vh]" role="region" aria-label="منتجات الفاتورة" tabIndex={0}>
               <table className="w-full min-w-[480px] text-right text-sm">

@@ -9,6 +9,7 @@ import * as salesApi from '../../../api/sales'
 import * as shiftsApi from '../../../api/shifts'
 import { useAuth } from '../../../context/AuthContext'
 import type { Category, PaymentMethod, Product } from '../../../types'
+import { formatLibyaDateTime, isOpenedOnPreviousLibyaDay } from '../../../utils/datetime'
 import { formatLyd, lineTotalLyd } from '../../../utils/money'
 import { playPaymentSuccessSound, preparePaymentSound } from '../../../utils/paymentSound'
 import { printSaleReceipt } from '../../../utils/receiptPrint'
@@ -32,6 +33,7 @@ export function PosPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [hasShift, setHasShift] = useState<boolean | null>(null)
+  const [staleShiftOpenedAt, setStaleShiftOpenedAt] = useState<string | null>(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
   const [search, setSearch] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
@@ -50,7 +52,13 @@ export function PosPage() {
     setLoading(true)
     setError(null)
     try {
-      await shiftsApi.currentShift()
+      const shift = await shiftsApi.currentShift()
+      if (isOpenedOnPreviousLibyaDay(shift.opened_at)) {
+        setHasShift(false)
+        setStaleShiftOpenedAt(shift.opened_at)
+        return
+      }
+      setStaleShiftOpenedAt(null)
       setHasShift(true)
       const [cats, prods] = await Promise.all([categoriesApi.listCategories(), productsApi.listProducts()])
       setCategories(cats)
@@ -58,9 +66,11 @@ export function PosPage() {
     } catch (err) {
       if (err instanceof ApiError && err.status === 404 && err.code === 'no_open_shift') {
         setHasShift(false)
+        setStaleShiftOpenedAt(null)
         return
       }
       setHasShift(null)
+      setStaleShiftOpenedAt(null)
       setError(err instanceof ApiError && err.status !== 0 ? err.message : 'تعذر الاتصال بالخادم. تحقق من الشبكة ثم أعد المحاولة.')
     } finally {
       setLoading(false)
@@ -156,10 +166,16 @@ export function PosPage() {
   }
 
   if (!hasShift) {
+    const stale = staleShiftOpenedAt !== null
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col pb-24 lg:justify-center lg:pb-0">
         <div className="mb-5 border-b border-border/60 pb-3">
-          <PageHeader title="نقطة البيع" description="ابدأ ورديتك لتتمكن من تسجيل الطلبات وإتمام الدفع." />
+          <PageHeader
+            title="نقطة البيع"
+            description={stale
+              ? 'أقفل وردية اليوم السابق قبل البدء بالبيع.'
+              : 'ابدأ ورديتك لتتمكن من تسجيل الطلبات وإتمام الدفع.'}
+          />
         </div>
         {error ? <Alert className="mb-4">{error}</Alert> : null}
         <Card className="overflow-hidden p-0">
@@ -176,13 +192,19 @@ export function PosPage() {
             <span className="flex size-20 items-center justify-center rounded-3xl bg-secondary text-primary sm:size-24">
               <LockKeyhole className="size-10 sm:size-12" aria-hidden="true" />
             </span>
-            <h3 className="mt-5 text-2xl font-extrabold text-foreground">لا توجد وردية مفتوحة</h3>
+            <h3 className="mt-5 text-2xl font-extrabold text-foreground">
+              {stale ? 'وردية من يوم سابق ما زالت مفتوحة' : 'لا توجد وردية مفتوحة'}
+            </h3>
             <p className="mt-2 max-w-md text-base leading-relaxed text-muted-foreground">
-              افتح وردية وأدخل المبلغ الموجود في الدرج قبل البيع، ثم يمكنك العودة إلى نقطة البيع وإنشاء الفواتير.
+              {stale
+                ? `فُتحت الوردية في ${formatLibyaDateTime(staleShiftOpenedAt)}. أقفلها بعد عدّ الدرج، ثم افتح وردية جديدة لليوم.`
+                : 'افتح وردية وأدخل المبلغ الموجود في الدرج قبل البيع، ثم يمكنك العودة إلى نقطة البيع وإنشاء الفواتير.'}
             </p>
             <Button asChild size="lg" className="mt-7 w-full rounded-2xl sm:w-auto sm:min-w-56">
               <Link to="/cashier/shift">
-                <Clock3 className="size-5" aria-hidden="true" /> الانتقال لفتح الوردية <ArrowLeft className="size-5" aria-hidden="true" />
+                <Clock3 className="size-5" aria-hidden="true" />
+                {stale ? 'الانتقال لإقفال الوردية' : 'الانتقال لفتح الوردية'}
+                <ArrowLeft className="size-5" aria-hidden="true" />
               </Link>
             </Button>
           </div>

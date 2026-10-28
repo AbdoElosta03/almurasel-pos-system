@@ -12,6 +12,7 @@ import { useAuth } from '../../../../context/AuthContext'
 import { Alert } from '../../../../shared/ui/Alert'
 import { Card } from '../../../../shared/ui/Card'
 import { PageHeader } from '../../../../shared/ui/PageHeader'
+import { formatLibyaDateTime } from '../../../../utils/datetime'
 
 export function DatabasePage() {
   const navigate = useNavigate()
@@ -139,7 +140,7 @@ export function DatabasePage() {
           {backups.map((backup) => (
             <div key={backup.filename} className="flex items-center justify-between gap-3 rounded-xl border border-border/60 p-3">
               <div className="min-w-0">
-                <p className="text-sm font-medium">{backup.kind === 'auto' ? 'تلقائية' : backup.kind === 'safety' ? 'نسخة أمان قبل الاستعادة' : 'يدوية'} — {new Date(backup.created_at).toLocaleString('ar-LY')}</p>
+                <p className="text-sm font-medium">{backup.kind === 'auto' ? 'تلقائية' : backup.kind === 'safety' ? 'نسخة أمان قبل الاستعادة' : 'يدوية'} — {formatLibyaDateTime(backup.created_at)}</p>
                 <p className="text-xs text-muted-foreground">{(backup.size_bytes / 1024 / 1024).toFixed(2)} MB</p>
               </div>
               <div className="flex flex-wrap gap-2">

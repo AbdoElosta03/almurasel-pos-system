@@ -4,18 +4,13 @@ import { useParams } from 'react-router-dom'
 import { ApiError } from '../../../../api/errors'
 import * as reportsApi from '../../../../api/reports'
 import type { SaleDetail } from '../../../../types'
+import { formatLibyaDateTime } from '../../../../utils/datetime'
 import { formatLyd } from '../../../../utils/money'
 import { Alert } from '../../../../shared/ui/Alert'
 import { LoadingBlock } from '../../../../shared/ui/LoadingBlock'
 import { Badge } from '../../../../components/ui/badge'
 import { Card } from '../../../../components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table'
-
-function formatWhen(value: string) {
-  return new Date(value).toLocaleString('ar-LY', {
-    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-  })
-}
 
 export function AdminSaleDetailsPage() {
   const { saleId } = useParams()
@@ -50,12 +45,12 @@ export function AdminSaleDetailsPage() {
       {!loading && sale ? (
         <>
           <Card className="grid gap-4 p-5 sm:grid-cols-2">
-            <p>التاريخ: <strong>{formatWhen(sale.created_at)}</strong></p>
+            <p>التاريخ: <strong>{formatLibyaDateTime(sale.created_at)}</strong></p>
             <p>الكاشير: <strong>{sale.cashier_username}</strong></p>
             <p>الوردية: <strong>#{sale.shift_id}</strong></p>
             <p>طريقة الدفع: <strong>{sale.payment_method === 'cash' ? 'نقدي' : 'بطاقة مصرفية'}</strong></p>
             <p>الحالة: <Badge variant={sale.status === 'cancelled' ? 'destructive' : 'default'}>{sale.status === 'cancelled' ? 'ملغاة' : 'مكتملة'}</Badge></p>
-            {sale.cancelled_at ? <p>الإلغاء: <strong>{sale.cancelled_by_username ?? '—'} · {formatWhen(sale.cancelled_at)}</strong></p> : null}
+            {sale.cancelled_at ? <p>الإلغاء: <strong>{sale.cancelled_by_username ?? '—'} · {formatLibyaDateTime(sale.cancelled_at)}</strong></p> : null}
           </Card>
           <Card className="overflow-hidden p-0">
             <Table className="min-w-[650px]">

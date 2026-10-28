@@ -31,6 +31,7 @@ export const errorMessages: Record<string, string> = {
   sale_not_found: 'الفاتورة غير موجودة',
   shift_not_found: 'الوردية غير موجودة',
   no_open_shift: 'لا توجد وردية مفتوحة',
+  shift_from_previous_day: 'الوردية من يوم سابق — أقفلها أولاً قبل البيع',
   product_not_available: 'المنتج غير متاح للبيع',
   sale_already_cancelled: 'الفاتورة ملغاة مسبقاً',
   shift_already_closed: 'الوردية مقفلة مسبقاً',
