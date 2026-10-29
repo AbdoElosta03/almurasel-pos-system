@@ -54,10 +54,7 @@ export function ShiftPage() {
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(19rem,0.8fr)]">
           <div className="space-y-4">
             {staleShift ? (
-              <Alert>
-                وردية من يوم سابق ما زالت مفتوحة (فُتحت في {formatLibyaDateTime(shift.opened_at)}).
-                أقفلها بعد عدّ الدرج قبل البيع أو فتح وردية جديدة.
-              </Alert>
+              <Alert>{`وردية من يوم سابق ما زالت مفتوحة (فُتحت في ${formatLibyaDateTime(shift.opened_at)}). أقفلها بعد عدّ الدرج قبل البيع أو فتح وردية جديدة.`}</Alert>
             ) : null}
             <CurrentShiftPanel shift={shift} />
             {!staleShift ? (
