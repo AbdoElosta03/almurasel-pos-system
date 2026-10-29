@@ -102,6 +102,7 @@ export function DailyClosingsPage() {
 
   const sticky = tableHeadCellStickyClass(rows.length)
   const headers = [
+    'رقم الوردية',
     'الكاشير',
     'وقت الفتح',
     'وقت الإغلاق',
@@ -114,11 +115,11 @@ export function DailyClosingsPage() {
   ]
 
   return (
-    <div className="w-full space-y-5 -mx-4 px-2 sm:-mx-6 sm:px-3">
+    <div className="mx-auto w-full space-y-5 px-3 sm:px-5">
       <div className="border-b border-border/40 pb-4">
         <PageHeader
           title="إغلاق الحسابات اليومية"
-          description="ورديات اليوم بعد إغلاق الكاشير، مع مطابقة المبلغ الموجود في الدرج."
+          description="الورديات التي فُتحت في هذا التاريخ، مع مطابقة المبلغ الموجود في الدرج."
         />
       </div>
 
@@ -142,28 +143,29 @@ export function DailyClosingsPage() {
       ) : null}
       {!loading && rows.length > 0 ? (
         <Card className="overflow-hidden p-0">
-          <Table className="min-w-[1020px]" containerClassName={tableScrollContainerClass(rows.length, 'comfortable')}>
+          <Table className="min-w-[960px] text-sm" containerClassName={tableScrollContainerClass(rows.length)}>
             <TableHeader className={tableHeaderRowClass(rows.length, true)}>
               <TableRow className="hover:bg-secondary/60">
                 {headers.map((label) => (
-                  <TableHead key={label} className={sticky}>{label}</TableHead>
+                  <TableHead key={label} className={`${sticky} h-11 px-3 text-sm`}>{label}</TableHead>
                 ))}
               </TableRow>
             </TableHeader>
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.shift_id}>
-                  <TableCell className="font-extrabold">{row.cashier_username}</TableCell>
-                  <TableCell>{formatLibyaDateTime(row.opened_at)}</TableCell>
-                  <TableCell>{formatLibyaDateTime(row.closed_at)}</TableCell>
-                  <TableCell>{formatLyd(row.opening_cash_lyd)}</TableCell>
-                  <TableCell>{row.closing_cash_lyd === null ? '—' : formatLyd(row.closing_cash_lyd)}</TableCell>
-                  <TableCell>
+                  <TableCell className="px-3 py-3 font-extrabold">#{row.shift_id}</TableCell>
+                  <TableCell className="px-3 py-3 font-extrabold">{row.cashier_username}</TableCell>
+                  <TableCell className="px-3 py-3">{formatLibyaDateTime(row.opened_at)}</TableCell>
+                  <TableCell className="px-3 py-3">{formatLibyaDateTime(row.closed_at)}</TableCell>
+                  <TableCell className="px-3 py-3">{formatLyd(row.opening_cash_lyd)}</TableCell>
+                  <TableCell className="px-3 py-3">{row.closing_cash_lyd === null ? '—' : formatLyd(row.closing_cash_lyd)}</TableCell>
+                  <TableCell className="px-3 py-3">
                     <div className="font-extrabold">{formatLyd(row.sales_total_lyd)}</div>
-                    <div className="text-xs text-muted-foreground">نقد {formatLyd(row.cash_sales_lyd)} · بطاقة {formatLyd(row.card_sales_lyd)}</div>
+                    <div className="text-[11px] text-muted-foreground">نقد {formatLyd(row.cash_sales_lyd)} · بطاقة {formatLyd(row.card_sales_lyd)}</div>
                   </TableCell>
-                  <TableCell>{row.counted_cash_lyd === null ? '—' : formatLyd(row.counted_cash_lyd)}</TableCell>
-                  <TableCell>
+                  <TableCell className="px-3 py-3">{row.counted_cash_lyd === null ? '—' : formatLyd(row.counted_cash_lyd)}</TableCell>
+                  <TableCell className="px-3 py-3">
                     <Badge
                       variant={row.result === 'deficit' ? 'destructive' : row.result === 'surplus' || row.result === 'match' ? 'default' : 'outline'}
                       className={row.result === 'surplus' ? 'bg-emerald-700' : undefined}
@@ -171,11 +173,11 @@ export function DailyClosingsPage() {
                       {resultText(row)}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-3 py-3">
                     {row.result === 'pending' ? (
                       <Button type="button" size="sm" onClick={() => openClose(row)}>إغلاق الحساب</Button>
                     ) : (
-                      <span className="text-sm text-muted-foreground">{row.result === 'open' ? 'بانتظار الكاشير' : 'مغلق'}</span>
+                      <span className="text-xs text-muted-foreground">{row.result === 'open' ? 'بانتظار الكاشير' : 'مغلق'}</span>
                     )}
                   </TableCell>
                 </TableRow>
@@ -193,7 +195,7 @@ export function DailyClosingsPage() {
           {selected ? (
             <div className="space-y-4 pt-2">
               <div className="rounded-xl border border-border bg-secondary/40 p-4 text-sm">
-                <p>الكاشير: <strong>{selected.cashier_username}</strong></p>
+                <p>الوردية: <strong>#{selected.shift_id}</strong> — الكاشير: <strong>{selected.cashier_username}</strong></p>
                 <p className="mt-2">المتوقع في الدرج: <strong className="text-primary">{formatLyd(selected.expected_drawer_lyd)}</strong></p>
                 <p className="mt-1 text-muted-foreground">المبلغ قبل البيع + مبيعات النقد فقط.</p>
               </div>

@@ -10,6 +10,9 @@ import { PurchasesPage } from '../pages/admin/purchases/page'
 import { PurchaseCreatePage } from '../pages/admin/purchases/create/page'
 import { PurchaseDetailsPage } from '../pages/admin/purchases/details/page'
 import { ReportsPage } from '../pages/admin/reports/page'
+import { StatisticsPage } from '../pages/admin/statistics/page'
+import { WeeklySalesPage } from '../pages/admin/statistics/weekly/page'
+import { DailyProductSalesPage } from '../pages/admin/statistics/daily-products/page'
 import { DailyClosingsPage } from '../pages/admin/daily-closings/page'
 import { AdminSaleDetailsPage } from '../pages/admin/reports/details/page'
 import { SettingsPage } from '../pages/admin/settings/page'
@@ -38,6 +41,9 @@ export function AppRoutes() {
             <Route path="purchases/new" element={<PurchaseCreatePage />} />
             <Route path="purchases/:purchaseId" element={<PurchaseDetailsPage />} />
             <Route path="reports" element={<ReportsPage />} />
+            <Route path="statistics" element={<StatisticsPage />} />
+            <Route path="statistics/weekly" element={<WeeklySalesPage />} />
+            <Route path="statistics/daily-products" element={<DailyProductSalesPage />} />
             <Route path="daily-closings" element={<DailyClosingsPage />} />
             <Route path="reports/sales/:saleId" element={<AdminSaleDetailsPage />} />
             <Route path="settings" element={<SettingsPage />} />

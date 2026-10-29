@@ -1,13 +1,17 @@
 from datetime import date
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.core.deps import require_admin
+from app.core.config import settings
+from app.utils.time import day_bounds
 from app.db.session import get_db
 from app.schemas.report import ReportSummary, SaleDetail, SalesReport
+from app.schemas.statistics import DailyProductSales, WeeklySales
 from app.services import reports as reports_service
+from app.services import statistics as statistics_service
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 
@@ -20,6 +24,30 @@ def summary(
     _: object = Depends(require_admin),
 ):
     return reports_service.summary(db, period, shift_id)
+
+
+@router.get("/weekly-sales", response_model=WeeklySales)
+def weekly_sales(
+    week_offset: int = Query(default=0, ge=0, le=104),
+    db: Session = Depends(get_db),
+    _: object = Depends(require_admin),
+):
+    return statistics_service.weekly_sales(db, week_offset)
+
+
+@router.get("/daily-product-sales", response_model=DailyProductSales)
+def daily_product_sales(
+    day_offset: int = Query(default=0, ge=0, le=365),
+    selected_date: date | None = Query(default=None, alias="date"),
+    db: Session = Depends(get_db),
+    _: object = Depends(require_admin),
+):
+    if selected_date is not None:
+        _, _, today = day_bounds(0, settings.timezone)
+        day_offset = (today - selected_date).days
+        if day_offset < 0:
+            raise HTTPException(status_code=422, detail="لا يمكن اختيار تاريخ في المستقبل")
+    return statistics_service.daily_product_sales(db, day_offset)
 
 
 @router.get("/sales", response_model=SalesReport)

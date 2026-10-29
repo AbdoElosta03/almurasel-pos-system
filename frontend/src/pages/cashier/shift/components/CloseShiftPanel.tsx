@@ -34,7 +34,13 @@ export function CloseShiftPanel({
   }
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+    <form className="relative flex flex-col gap-5" onSubmit={onSubmit}>
+      {busy ? (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-card/85">
+          <span className="size-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" aria-hidden="true" />
+          <p className="text-sm font-bold">جاري إقفال الوردية...</p>
+        </div>
+      ) : null}
       <div>
         <div className="flex items-center gap-2 text-primary">
           <LockKeyhole className="size-5" aria-hidden="true" />

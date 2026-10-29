@@ -10,7 +10,7 @@ from app.core.errors import register_exception_handlers
 from app.db.session import SessionLocal, engine
 from app.routers import audit, auth, backups, categories, daily_closings, products, purchases, reports, sales, shifts, users
 from app.services.backups import create_auto_if_due
-from app.services.seed import seed_catalog
+from app.services.seed import seed_cashiers, seed_catalog
 from app.services.users import seed_admin
 
 
@@ -67,6 +67,7 @@ async def lifespan(_app: FastAPI):
         db = SessionLocal()
         try:
             seed_admin(db)
+            seed_cashiers(db)
             seed_catalog(db)
         finally:
             db.close()

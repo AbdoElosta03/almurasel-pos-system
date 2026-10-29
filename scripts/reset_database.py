@@ -44,12 +44,13 @@ def main() -> int:
 
     # تشغيل البذور (مدير + تصنيفات ومنتجات) مثل أول تشغيل للتطبيق
     from app.db.session import SessionLocal
-    from app.services.seed import seed_catalog
+    from app.services.seed import seed_cashiers, seed_catalog
     from app.services.users import seed_admin
 
     db = SessionLocal()
     try:
         seed_admin(db)
+        seed_cashiers(db)
         seed_catalog(db)
         print("تم إنشاء الجداول وبيانات البذور الافتراضية.")
     finally:

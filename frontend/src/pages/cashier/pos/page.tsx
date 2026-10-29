@@ -34,6 +34,7 @@ export function PosPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [hasShift, setHasShift] = useState<boolean | null>(null)
   const [staleShiftOpenedAt, setStaleShiftOpenedAt] = useState<string | null>(null)
+  const shiftOpenedAtRef = useRef<string | null>(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
   const [search, setSearch] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
@@ -53,6 +54,7 @@ export function PosPage() {
     setError(null)
     try {
       const shift = await shiftsApi.currentShift()
+      shiftOpenedAtRef.current = shift.opened_at
       if (isOpenedOnPreviousLibyaDay(shift.opened_at)) {
         setHasShift(false)
         setStaleShiftOpenedAt(shift.opened_at)
@@ -65,12 +67,14 @@ export function PosPage() {
       setProducts(prods)
     } catch (err) {
       if (err instanceof ApiError && err.status === 404 && err.code === 'no_open_shift') {
+        shiftOpenedAtRef.current = null
         setHasShift(false)
         setStaleShiftOpenedAt(null)
         return
       }
       setHasShift(null)
       setStaleShiftOpenedAt(null)
+      shiftOpenedAtRef.current = null
       setError(err instanceof ApiError && err.status !== 0 ? err.message : 'تعذر الاتصال بالخادم. تحقق من الشبكة ثم أعد المحاولة.')
     } finally {
       setLoading(false)
@@ -80,6 +84,29 @@ export function PosPage() {
   useEffect(() => {
     void load()
   }, [load])
+
+  const lockIfShiftFromPreviousDay = useCallback(() => {
+    const openedAt = shiftOpenedAtRef.current
+    if (!openedAt || !isOpenedOnPreviousLibyaDay(openedAt)) return false
+    setHasShift(false)
+    setStaleShiftOpenedAt(openedAt)
+    setCartOpen(false)
+    return true
+  }, [])
+
+  useEffect(() => {
+    const onTick = () => {
+      lockIfShiftFromPreviousDay()
+    }
+    const id = window.setInterval(onTick, 30_000)
+    window.addEventListener('focus', onTick)
+    document.addEventListener('visibilitychange', onTick)
+    return () => {
+      window.clearInterval(id)
+      window.removeEventListener('focus', onTick)
+      document.removeEventListener('visibilitychange', onTick)
+    }
+  }, [lockIfShiftFromPreviousDay])
 
   const visibleProducts = useMemo(() => {
     const query = search.trim().toLocaleLowerCase()
@@ -95,7 +122,7 @@ export function PosPage() {
   )
 
   const addProduct = (product: Product) => {
-    if (checkoutInProgress.current) return
+    if (checkoutInProgress.current || lockIfShiftFromPreviousDay()) return
     setLines((current) => {
       const existing = current.find((line) => line.product.id === product.id)
       if (existing) {
@@ -121,6 +148,10 @@ export function PosPage() {
 
   const checkout = async (payment_method: PaymentMethod) => {
     if (checkoutInProgress.current || lines.length === 0) return
+    if (lockIfShiftFromPreviousDay()) {
+      setToast({ tone: 'error', text: 'انتهى يوم الوردية. أقفلها ثم افتح وردية جديدة.' })
+      return
+    }
     preparePaymentSound()
     checkoutInProgress.current = true
     setBusy(true)
@@ -139,6 +170,13 @@ export function PosPage() {
         printSaleReceipt(sale, user?.username)
       }
     } catch (err) {
+      if (err instanceof ApiError && err.code === 'shift_from_previous_day') {
+        lockIfShiftFromPreviousDay()
+        setHasShift(false)
+        if (shiftOpenedAtRef.current) setStaleShiftOpenedAt(shiftOpenedAtRef.current)
+        setToast({ tone: 'error', text: err.message })
+        return
+      }
       const message = err instanceof ApiError ? err.message : 'تعذر إتمام البيع'
       setCheckoutError(message)
       setToast({ tone: 'error', text: message })

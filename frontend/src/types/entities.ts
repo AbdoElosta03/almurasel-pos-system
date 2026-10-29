@@ -165,6 +165,42 @@ export interface SalesReport {
   total: number
 }
 
+export interface WeeklySalesDay {
+  weekday: number
+  label: string
+  total_lyd: number
+  count: number
+}
+
+export interface WeeklySalesInsights {
+  best_days: string[]
+  hour_from: number | null
+  hour_to: number | null
+  summary: string
+}
+
+export interface WeeklySales {
+  week_start: string
+  week_end: string
+  week_offset: number
+  days: WeeklySalesDay[]
+  insights: WeeklySalesInsights
+}
+
+export interface DailyProductSalesItem {
+  product_id: number
+  product_name: string
+  qty: number
+  total_lyd: number
+}
+
+export interface DailyProductSales {
+  date: string
+  day_offset: number
+  items: DailyProductSalesItem[]
+  total_qty: number
+}
+
 export interface AuditLog {
   id: number
   actor_id: number

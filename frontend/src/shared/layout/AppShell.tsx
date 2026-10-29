@@ -48,26 +48,16 @@ export function AppShell({ title, home, children }: { title: string; home: strin
       })
   }
 
-  const goBack = () => {
-    const historyIndex = window.history.state?.idx
-    if (typeof historyIndex === 'number' && historyIndex > 0) {
-      navigate(-1)
-    } else {
-      navigate(location.pathname.startsWith('/cashier/invoices/') ? '/cashier/invoices' : home)
-    }
-  }
-
   const backButton = !isHome ? (
     <Button
       type="button"
-      size="lg"
-      onClick={goBack}
-      aria-label="العودة إلى الصفحة السابقة"
-      title="رجوع"
-      className={cn('fixed right-5 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-40 rounded-full px-6 shadow-lg shadow-primary/25 sm:right-6', isPos && 'bottom-[calc(6.5rem+env(safe-area-inset-bottom))] lg:bottom-[calc(3.5rem+env(safe-area-inset-bottom))]')}
+      size="icon-lg"
+      onClick={() => navigate(home)}
+      aria-label="العودة إلى الرئيسية"
+      title="العودة إلى الرئيسية"
+      className={cn('fixed right-5 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-40 rounded-full shadow-lg shadow-primary/25 sm:right-6', isPos && 'bottom-[calc(6.5rem+env(safe-area-inset-bottom))] lg:bottom-[calc(3.5rem+env(safe-area-inset-bottom))]')}
     >
-      <Icon name="arrow" className="size-5 rotate-180" />
-      الرجوع إلى الخلف
+      <Icon name="home" className="size-6" />
     </Button>
   ) : null
 
@@ -75,6 +65,7 @@ export function AppShell({ title, home, children }: { title: string; home: strin
     <div className="flex min-h-[100dvh] flex-col bg-background">
       <header className="relative z-10 border-b border-border bg-card px-4 py-2 sm:px-6">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <Link to={home} className="flex min-h-12 items-center gap-3 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="العودة إلى الرئيسية">
             <span className="flex h-10 w-14 shrink-0 items-center justify-center rounded-xl bg-primary">
               <img src={logoLight} alt="" className="h-full w-full object-contain" />
@@ -84,7 +75,6 @@ export function AppShell({ title, home, children }: { title: string; home: strin
               <span className="block text-xs font-medium text-muted-foreground">{title}</span>
             </span>
           </Link>
-          <div className="flex items-center gap-2 sm:gap-3">
             {!isHome && (
               <Button asChild variant="outline" size="default">
                 <Link to={home}>
@@ -93,6 +83,8 @@ export function AppShell({ title, home, children }: { title: string; home: strin
                 </Link>
               </Button>
             )}
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
             <span className="hidden h-10 w-px bg-border sm:block" />
             <span className="hidden text-sm font-semibold text-foreground sm:block">{user?.username}</span>
             <Button variant="ghost" onClick={onLogout} disabled={logoutChecking}>

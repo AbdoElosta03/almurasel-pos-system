@@ -53,6 +53,49 @@ def period_bounds(period: str, timezone_name: str, moment: datetime | None = Non
     return start.astimezone(UTC).replace(tzinfo=None), end.astimezone(UTC).replace(tzinfo=None)
 
 
+def week_bounds(
+    week_offset: int,
+    timezone_name: str,
+    moment: datetime | None = None,
+) -> tuple[datetime, datetime, date, date]:
+    """Local Saturday–Friday week as a half-open UTC range, plus the inclusive local dates.
+
+    week_offset 0 is the week containing moment. Larger offsets step backward.
+    """
+    if week_offset < 0:
+        raise ValueError("week_offset must be zero or positive")
+    start, end = period_bounds("week", timezone_name, moment)
+    if week_offset:
+        delta = timedelta(days=7 * week_offset)
+        start -= delta
+        end -= delta
+    tz = ZoneInfo(timezone_name)
+    local_start = start.replace(tzinfo=UTC).astimezone(tz).date()
+    local_end = end.replace(tzinfo=UTC).astimezone(tz).date() - timedelta(days=1)
+    return start, end, local_start, local_end
+
+
+def day_bounds(
+    day_offset: int,
+    timezone_name: str,
+    moment: datetime | None = None,
+) -> tuple[datetime, datetime, date]:
+    """Local calendar day as a half-open UTC range, plus the local date.
+
+    day_offset 0 is the day containing moment. Larger offsets step backward.
+    """
+    if day_offset < 0:
+        raise ValueError("day_offset must be zero or positive")
+    start, end = period_bounds("day", timezone_name, moment)
+    if day_offset:
+        delta = timedelta(days=day_offset)
+        start -= delta
+        end -= delta
+    tz = ZoneInfo(timezone_name)
+    local_date = start.replace(tzinfo=UTC).astimezone(tz).date()
+    return start, end, local_date
+
+
 def date_range_bounds(date_from: date, date_to: date, timezone_name: str) -> tuple[datetime, datetime]:
     """Inclusive local dates as a half-open UTC range."""
     tz = ZoneInfo(timezone_name)
