@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     seed_on_startup: bool = True
     backup_dir: str = "backups"
     backup_auto_enabled: bool = True
+    receipt_printer_name: str = "xprinter"
+    receipt_print_timeout_seconds: int = 10
 
 
 settings = Settings()

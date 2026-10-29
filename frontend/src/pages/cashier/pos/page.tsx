@@ -7,13 +7,12 @@ import * as categoriesApi from '../../../api/categories'
 import * as productsApi from '../../../api/products'
 import * as salesApi from '../../../api/sales'
 import * as shiftsApi from '../../../api/shifts'
-import { useAuth } from '../../../context/AuthContext'
 import type { Category, PaymentMethod, Product } from '../../../types'
 import { formatLibyaDateTime, isOpenedOnPreviousLibyaDay } from '../../../utils/datetime'
 import { formatLyd, lineTotalLyd } from '../../../utils/money'
 import { playPaymentSuccessSound, preparePaymentSound } from '../../../utils/paymentSound'
-import { printSaleReceipt } from '../../../utils/receiptPrint'
-import { isReceiptPrintingEnabled } from '../../../utils/receiptSettings'
+import { printReceipt } from '../../../api/printer'
+import { isReceiptPrintingEnabled, setReceiptPrintingEnabled } from '../../../utils/receiptSettings'
 import { Alert } from '../../../shared/ui/Alert'
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog'
 import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
@@ -29,7 +28,6 @@ import { CategoryFilter } from './components/CategoryFilter'
 import { ProductGrid } from './components/ProductGrid'
 
 export function PosPage() {
-  const { user } = useAuth()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [hasShift, setHasShift] = useState<boolean | null>(null)
@@ -167,7 +165,15 @@ export function PosPage() {
       setCartOpen(false)
       setToast({ tone: 'success', text: 'تم إنشاء الفاتورة بنجاح' })
       if (isReceiptPrintingEnabled()) {
-        printSaleReceipt(sale, user?.username)
+        try {
+          await printReceipt(sale.id)
+        } catch (printError) {
+          setReceiptPrintingEnabled(false)
+          const reason = printError instanceof ApiError ? printError.message : 'تعذّر الاتصال بالطابعة'
+          const message = `تم حفظ البيع رقم ${sale.id}. ${reason}. أُوقفت الطباعة تلقائيًا؛ فعّلها من الإعدادات بعد معالجة المشكلة. لا تُعِد البيع.`
+          setToast({ tone: 'error', text: message })
+          setCheckoutError(message)
+        }
       }
     } catch (err) {
       if (err instanceof ApiError && err.code === 'shift_from_previous_day') {

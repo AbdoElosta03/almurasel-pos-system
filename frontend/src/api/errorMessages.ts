@@ -1,6 +1,18 @@
 const FALLBACK = 'حدث خطأ غير متوقع'
 
 export const errorMessages: Record<string, string> = {
+  printer_ready: 'الطابعة لا تبلغ عن عطل وطابورها فارغ؛ هذا لا يؤكد وجود الورق',
+  printer_windows_required: 'الطباعة المباشرة تحتاج خادم ويندوز متصلًا بالطابعة',
+  printer_dependencies_missing: 'ثبّت متطلبات الطباعة على الخادم ثم أعد تشغيله',
+  printer_not_found: 'طابعة xprinter غير موجودة على جهاز الخادم؛ راجع اسمها واتصال USB',
+  printer_not_ready: 'الطابعة تبلغ عن مشكلة؛ افحص الورق والغطاء واتصال USB',
+  printer_queue_busy: 'الطابعة مشغولة أو لديها فواتير معلّقة؛ لم تُضف فاتورة جديدة للطابور',
+  printer_failed: 'تعذرت الطباعة المباشرة؛ افحص الطابعة وطابور ويندوز',
+  printer_font_missing: 'خط Segoe UI المطلوب لطباعة العربية غير موجود على الخادم',
+  printer_timeout: 'انتهت مهلة الطباعة وأُلغي طلب النظام لتجنب تراكمه',
+  printer_cancel_failed: 'تعذّر إلغاء مهمة الطباعة؛ أوقف الطباعة وامسح المهمة من طابور ويندوز قبل تركيب الورق',
+  printer_already_attempted: 'سبق إرسال طلب طباعة لهذه الفاتورة؛ لن تُرسل مرة ثانية',
+  printer_receipt_expired: 'انتهت مهلة الطباعة التلقائية لهذه الفاتورة القديمة',
   invalid_credentials: 'اسم المستخدم أو كلمة المرور غير صحيحة',
   incorrect_current_password: 'كلمة المرور الحالية غير صحيحة',
   password_confirmation_mismatch: 'كلمتا المرور الجديدتان غير متطابقتين',

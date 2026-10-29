@@ -6,6 +6,7 @@ from app.db.session import get_db
 from app.models.user import User
 from app.schemas.sale import SaleCreate, SaleOut, SalePage
 from app.services import sales as sales_service
+from app.services import receipt_printer
 
 router = APIRouter(prefix="/sales", tags=["sales"])
 
@@ -28,6 +29,12 @@ def list_my_open_shift_sales(
 @router.get("/my-open-shift/{sale_id}", response_model=SaleOut)
 def get_my_open_shift_sale(sale_id: int, db: Session = Depends(get_db), user: User = Depends(require_cashier)):
     return sales_service.get_open_shift_sale(db, user, sale_id)
+
+
+@router.post("/{sale_id}/print")
+def print_receipt(sale_id: int, db: Session = Depends(get_db), user: User = Depends(require_cashier)):
+    sale = sales_service.get_open_shift_sale(db, user, sale_id)
+    return receipt_printer.print_sale(db, sale, user)
 
 
 @router.post("/{sale_id}/cancel", response_model=SaleOut)
