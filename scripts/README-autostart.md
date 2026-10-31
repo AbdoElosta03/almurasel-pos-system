@@ -23,4 +23,10 @@
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\install-autostart.ps1 -Remove
 ```
 
-عند تحديث ملفات الواجهة، نفّذ `npm run build` داخل `frontend` مرة أخرى ثم أعد تشغيل المهمة. إذا نقلت مجلد المشروع فأزل المهمة وأعد تثبيتها من المسار الجديد. لا تفتح المنافذ للشبكة أو الإنترنت دون إعدادات نشر وحماية مناسبة.
+لتحديث النسخة على جهاز الزبون لا تعِد تثبيت المهمة. من Git Bash في جذر المشروع:
+
+```bash
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/update-client.ps1
+```
+
+يوقف `scripts/update-client.ps1` المهمة وعملية الخادم، ينسخ `pos.db` إلى `backups/pre-update-...db`، يسحب التحديث، يحدّث مكتبات بايثون، يشغّل `alembic upgrade head`، يبني الواجهة، ثم يشغّل المهمة من جديد. كل خطوة تُطبع على الشاشة وتُحفظ في `logs/update.log`، ويتوقف السكربت عند أول فشل مع اسم الخطوة. إذا نقلت مجلد المشروع فأزل المهمة وأعد تثبيتها من المسار الجديد. لا تفتح المنافذ للشبكة أو الإنترنت دون إعدادات نشر وحماية مناسبة.

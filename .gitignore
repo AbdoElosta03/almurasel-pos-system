@@ -6,6 +6,7 @@ __pycache__/
 pos.db
 pos.db.old.*
 .env*
+!.env
 !.env.example
 !**/.env.example
 *.sqlite
