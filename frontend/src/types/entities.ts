@@ -1,4 +1,14 @@
-import type { DailyClosingResult, PaymentMethod, Role, SaleStatus, ShiftStatus } from './common'
+import type {
+  DailyClosingResult,
+  ExpenseCategory,
+  ExpenseSource,
+  LicenseLockReason,
+  LicensePlan,
+  PaymentMethod,
+  Role,
+  SaleStatus,
+  ShiftStatus,
+} from './common'
 
 export interface User {
   id: number
@@ -49,6 +59,7 @@ export interface DailyClosing {
   sales_total_lyd: number
   cash_sales_lyd: number
   card_sales_lyd: number
+  drawer_expenses_lyd: number
   expected_drawer_lyd: number
   counted_cash_lyd: number | null
   variance_lyd: number | null
@@ -204,8 +215,69 @@ export interface DailyProductSales {
 export interface AuditLog {
   id: number
   actor_id: number
+  actor_username: string
   action: string
   entity_type: string
   entity_id: number
   created_at: string
+}
+
+export interface Expense {
+  id: number
+  expense_date: string
+  category: ExpenseCategory
+  payee_name: string
+  note: string | null
+  amount_lyd: number
+  paid_from: ExpenseSource
+  shift_id: number | null
+  shift_cashier_username: string | null
+  created_by: number
+  created_by_username: string
+  created_at: string
+  deletable: boolean
+}
+
+export interface ExpenseList {
+  items: Expense[]
+  total: number
+  page: number
+  page_size: number
+  total_lyd: number
+}
+
+export interface ExpensePeriods {
+  day_lyd: number
+  day_count: number
+  week_lyd: number
+  week_count: number
+  month_lyd: number
+  month_count: number
+}
+
+export interface DrawerShiftOption {
+  shift_id: number
+  cashier_username: string
+  status: ShiftStatus
+  opened_at: string
+}
+
+export interface CurrentDrawer {
+  shift_id: number
+  opening_cash_lyd: number
+  cash_sales_lyd: number
+  drawer_expenses_lyd: number
+  expected_drawer_lyd: number
+  items: Expense[]
+}
+
+export interface LicenseStatus {
+  active: boolean
+  enforced: boolean
+  plan: LicensePlan | null
+  expires_at: string | null
+  days_remaining: number | null
+  warning: boolean
+  machine_id: string
+  lock_reason: LicenseLockReason | null
 }

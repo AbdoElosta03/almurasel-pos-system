@@ -109,6 +109,7 @@ export function DailyClosingsPage() {
     'في الدرج قبل البيع',
     'في الدرج عند الإغلاق',
     'إجمالي المبيعات',
+    'مصروفات الدرج',
     'ما عدّه المدير',
     'النتيجة',
     'إجراء',
@@ -143,7 +144,7 @@ export function DailyClosingsPage() {
       ) : null}
       {!loading && rows.length > 0 ? (
         <Card className="overflow-hidden p-0">
-          <Table className="min-w-[960px] text-sm" containerClassName={tableScrollContainerClass(rows.length)}>
+          <Table className="min-w-[1100px] text-sm" containerClassName={tableScrollContainerClass(rows.length)}>
             <TableHeader className={tableHeaderRowClass(rows.length, true)}>
               <TableRow className="hover:bg-secondary/60">
                 {headers.map((label) => (
@@ -164,6 +165,7 @@ export function DailyClosingsPage() {
                     <div className="font-extrabold">{formatLyd(row.sales_total_lyd)}</div>
                     <div className="text-[11px] text-muted-foreground">نقد {formatLyd(row.cash_sales_lyd)} · بطاقة {formatLyd(row.card_sales_lyd)}</div>
                   </TableCell>
+                  <TableCell className="px-3 py-3 font-extrabold">{formatLyd(row.drawer_expenses_lyd)}</TableCell>
                   <TableCell className="px-3 py-3">{row.counted_cash_lyd === null ? '—' : formatLyd(row.counted_cash_lyd)}</TableCell>
                   <TableCell className="px-3 py-3">
                     <Badge
@@ -196,8 +198,11 @@ export function DailyClosingsPage() {
             <div className="space-y-4 pt-2">
               <div className="rounded-xl border border-border bg-secondary/40 p-4 text-sm">
                 <p>الوردية: <strong>#{selected.shift_id}</strong> — الكاشير: <strong>{selected.cashier_username}</strong></p>
+                <p className="mt-2">قبل البيع: <strong>{formatLyd(selected.opening_cash_lyd)}</strong></p>
+                <p className="mt-1">مبيعات النقد: <strong>{formatLyd(selected.cash_sales_lyd)}</strong></p>
+                <p className="mt-1">مصروفات الدرج: <strong>{formatLyd(selected.drawer_expenses_lyd)}</strong></p>
                 <p className="mt-2">المتوقع في الدرج: <strong className="text-primary">{formatLyd(selected.expected_drawer_lyd)}</strong></p>
-                <p className="mt-1 text-muted-foreground">المبلغ قبل البيع + مبيعات النقد فقط.</p>
+                <p className="mt-1 text-muted-foreground">قبل البيع + مبيعات النقد − مصروفات الدرج. المشتريات لا تُخصم من الدرج.</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="counted-cash">المبلغ الذي وجدته في الدرج (د.ل)</Label>

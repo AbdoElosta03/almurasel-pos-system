@@ -1,4 +1,4 @@
-import type { PaymentMethod, ReportPeriod, ReportStatus, Role } from './common'
+import type { ExpenseCategory, ExpenseSource, PaymentMethod, ReportPeriod, ReportStatus, Role } from './common'
 
 export interface LoginRequest {
   username: string
@@ -68,6 +68,16 @@ export interface PurchaseCreate {
   purchase_date: string
   supplier_name?: string | null
   items: PurchaseItemInput[]
+}
+
+export interface ExpenseCreate {
+  expense_date: string
+  category: ExpenseCategory
+  payee_name: string
+  note?: string | null
+  amount_lyd: number
+  paid_from: ExpenseSource
+  shift_id?: number | null
 }
 
 export interface ShiftOpen {

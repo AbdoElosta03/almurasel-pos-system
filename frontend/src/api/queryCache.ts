@@ -22,8 +22,10 @@ export function invalidateAfterWrite(url: string): void {
   else if (url.startsWith('/products')) paths = ['/products']
   else if (url.startsWith('/categories')) paths = ['/categories', '/products']
   else if (url.startsWith('/purchases')) paths = ['/purchases']
+  else if (url.startsWith('/expenses')) paths = ['/expenses', '/daily-closings']
   else if (url.startsWith('/users')) paths = ['/users']
   else if (url.startsWith('/backups')) paths = ['/backups']
+  else if (url.startsWith('/license')) paths = ['/license']
   else paths = []
 
   if (!url.startsWith('/auth/login')) paths.push('/audit-logs')

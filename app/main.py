@@ -8,11 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.errors import register_exception_handlers
 from app.db.session import SessionLocal, engine
-from app.routers import audit, auth, backups, categories, daily_closings, products, purchases, reports, sales, shifts, users
+from app.routers import audit, auth, backups, categories, daily_closings, expenses, license, products, purchases, reports, sales, shifts, users
 from app.routers import printer
 from app.services.backups import create_auto_if_due
+from app.services import license as license_service
 from app.services.seed import seed_cashiers, seed_catalog
 from app.services.users import seed_admin
+from fastapi.responses import JSONResponse
 
 
 logger = logging.getLogger(__name__)
@@ -100,6 +102,23 @@ async def guard_restore(request: Request, call_next):
         return await call_next(request)
 
 
+@app.middleware("http")
+async def guard_license(request: Request, call_next):
+    # Registered after the database gate so this check runs first on every /api request.
+    path = request.url.path
+    if path.startswith("/api/") and not license_service.is_exempt_path(path, request.method):
+        try:
+            license_service.require_active()
+        except Exception as exc:
+            from fastapi import HTTPException
+
+            if isinstance(exc, HTTPException):
+                detail = exc.detail if isinstance(exc.detail, dict) else {"code": "http_error", "message": str(exc.detail)}
+                return JSONResponse(status_code=exc.status_code, content=detail)
+            raise
+    return await call_next(request)
+
+
 register_exception_handlers(app)
 app.add_middleware(
     CORSMiddleware,
@@ -112,6 +131,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 api = APIRouter(prefix="/api")
+api.include_router(license.router)
 api.include_router(auth.router)
 api.include_router(users.router)
 api.include_router(categories.router)
@@ -120,6 +140,7 @@ api.include_router(shifts.router)
 api.include_router(sales.router)
 api.include_router(printer.router)
 api.include_router(purchases.router)
+api.include_router(expenses.router)
 api.include_router(reports.router)
 api.include_router(daily_closings.router)
 api.include_router(audit.router)

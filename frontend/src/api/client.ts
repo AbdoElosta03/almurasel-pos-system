@@ -21,12 +21,17 @@ http.interceptors.request.use((config) => {
   return config
 })
 
+const LICENSE_LOCK_CODES = new Set(['license_required', 'license_expired', 'clock_tampered'])
+
 http.interceptors.response.use(
   (response) => response,
   (error) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status ?? 0
       const code = typeof error.response?.data?.code === 'string' ? error.response.data.code : 'http_error'
+      if (status === 403 && LICENSE_LOCK_CODES.has(code)) {
+        window.dispatchEvent(new CustomEvent('almurasel-license-lock', { detail: code }))
+      }
       throw new ApiError(status, code, translateError(code))
     }
     throw error
@@ -35,7 +40,7 @@ http.interceptors.response.use(
 
 export async function apiGet<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
   // Authentication is checked against the server each time; never reuse a previous identity.
-  if (url === '/auth/me') {
+  if (url === '/auth/me' || url === '/license/status') {
     const { data } = await http.get<T>(url, config)
     return data
   }

@@ -11,6 +11,7 @@ from app.models.sale import Sale
 from app.models.shift import Shift
 from app.models.user import User
 from app.schemas.daily_closing import DailyClosingIn, DailyClosingList, DailyClosingOut, DailyClosingResult
+from app.services.expenses import drawer_totals_by_shift
 from app.utils.money import dirhams_to_lyd, lyd_to_dirhams
 from app.utils.time import date_range_bounds, utc_now
 
@@ -51,8 +52,8 @@ def _result(shift_status: str, counted: int | None, variance: int | None) -> Dai
     return "match"
 
 
-def _row(shift: Shift, username: str, cash_dirhams: int, card_dirhams: int) -> DailyClosingOut:
-    expected = shift.opening_cash_dirhams + cash_dirhams
+def _row(shift: Shift, username: str, cash_dirhams: int, card_dirhams: int, expense_dirhams: int) -> DailyClosingOut:
+    expected = shift.opening_cash_dirhams + cash_dirhams - expense_dirhams
     counted = shift.counted_cash_dirhams
     variance = None if counted is None else counted - expected
     return DailyClosingOut(
@@ -67,6 +68,7 @@ def _row(shift: Shift, username: str, cash_dirhams: int, card_dirhams: int) -> D
         sales_total_lyd=dirhams_to_lyd(cash_dirhams + card_dirhams),
         cash_sales_lyd=dirhams_to_lyd(cash_dirhams),
         card_sales_lyd=dirhams_to_lyd(card_dirhams),
+        drawer_expenses_lyd=dirhams_to_lyd(expense_dirhams),
         expected_drawer_lyd=dirhams_to_lyd(expected),
         counted_cash_lyd=None if counted is None else dirhams_to_lyd(counted),
         variance_lyd=None if variance is None else dirhams_to_lyd(variance),
@@ -99,9 +101,13 @@ def list_for_day(db: Session, day: date | None) -> DailyClosingList:
             for user_id, username in db.execute(select(User.id, User.username).where(User.id.in_(cashier_ids))).all()
         }
     live = _sales_by_shift(db, [shift.id for shift in shifts if shift.reconciled_at is None])
+    expenses = drawer_totals_by_shift(db, [shift.id for shift in shifts])
     return DailyClosingList(
         date=selected,
-        items=[_row(shift, names.get(shift.cashier_id, ""), *_figures(shift, live)) for shift in shifts],
+        items=[
+            _row(shift, names.get(shift.cashier_id, ""), *_figures(shift, live), expenses.get(shift.id, 0))
+            for shift in shifts
+        ],
     )
 
 
@@ -123,4 +129,5 @@ def reconcile(db: Session, admin: User, shift_id: int, body: DailyClosingIn) -> 
     db.commit()
     db.refresh(shift)
     username = db.scalar(select(User.username).where(User.id == shift.cashier_id)) or ""
-    return _row(shift, username, cash_dirhams, card_dirhams)
+    expense_dirhams = drawer_totals_by_shift(db, [shift.id]).get(shift.id, 0)
+    return _row(shift, username, cash_dirhams, card_dirhams, expense_dirhams)

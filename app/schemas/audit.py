@@ -8,6 +8,7 @@ class AuditLogOut(BaseModel):
 
     id: int
     actor_id: int
+    actor_username: str
     action: str
     entity_type: str
     entity_id: int

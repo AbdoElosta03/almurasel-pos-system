@@ -1,6 +1,6 @@
 import type { ReactNode, SVGProps } from 'react'
 
-export type IconName = 'home' | 'pos' | 'shift' | 'users' | 'categories' | 'products' | 'reports' | 'audit' | 'settings' | 'sales' | 'logout' | 'arrow' | 'store' | 'card' | 'cash' | 'bag' | 'search' | 'grid' | 'list' | 'trash' | 'closing'
+export type IconName = 'home' | 'pos' | 'shift' | 'users' | 'categories' | 'products' | 'reports' | 'audit' | 'settings' | 'sales' | 'logout' | 'arrow' | 'store' | 'card' | 'cash' | 'bag' | 'search' | 'grid' | 'list' | 'trash' | 'closing' | 'expense'
 
 const paths: Record<IconName, ReactNode> = {
   home: <><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></>,
@@ -20,6 +20,7 @@ const paths: Record<IconName, ReactNode> = {
   card: <><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></>,
   cash: <><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M5 12h1m12 0h1"/></>,
   bag: <><path d="M4 8h16l-1 13H5L4 8ZM9 9V6a3 3 0 0 1 6 0v3"/></>,
+  expense: <><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 14h2"/><path d="M8 3v4M12 3v4"/></>,
   search: <><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></>,
   grid: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
   list: <><path d="M9 6h12M9 12h12M9 18h12M3 6h1M3 12h1M3 18h1"/></>,

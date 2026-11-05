@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 import { Banknote, LockKeyhole } from 'lucide-react'
 
 import type { Shift } from '../../../../types'
-import { parseLydInput } from '../../../../utils/money'
+import { parseLydInput, formatLyd } from '../../../../utils/money'
 import { Alert } from '../../../../shared/ui/Alert'
 import { Button } from '../../../../components/ui/button'
 import { Input } from '../../../../components/ui/input'
@@ -11,9 +11,15 @@ import { Label } from '../../../../components/ui/label'
 
 export function CloseShiftPanel({
   shift,
+  drawerExpensesLyd,
+  cashSalesLyd,
+  expectedDrawerLyd,
   onClose,
 }: {
   shift: Shift
+  drawerExpensesLyd: number
+  cashSalesLyd: number
+  expectedDrawerLyd: number
   onClose: (closingCashLyd: number) => Promise<void>
 }) {
   const [closingCash, setClosingCash] = useState(String(shift.opening_cash_lyd))
@@ -47,6 +53,13 @@ export function CloseShiftPanel({
           <h3 className="text-xl font-extrabold text-foreground">إقفال الوردية</h3>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">عدّ النقدية الموجودة في الصندوق وأدخل المبلغ النهائي.</p>
+      </div>
+      <div className="rounded-xl border border-border bg-secondary/40 p-4 text-sm">
+        <p>قبل البيع: <strong>{formatLyd(shift.opening_cash_lyd)}</strong></p>
+        <p className="mt-1">مبيعات النقد: <strong>{formatLyd(cashSalesLyd)}</strong></p>
+        <p className="mt-1">مصروفات الدرج: <strong>{formatLyd(drawerExpensesLyd)}</strong></p>
+        <p className="mt-2">المتوقع في الدرج: <strong className="text-primary">{formatLyd(expectedDrawerLyd)}</strong></p>
+        <p className="mt-1 text-muted-foreground">قبل البيع + مبيعات النقد − مصروفات الدرج.</p>
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="closing-cash" className="font-bold">المبلغ الموجود في الدرج عند الإغلاق (د.ل)</Label>

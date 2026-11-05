@@ -6,6 +6,7 @@ import { Button } from '../../../components/ui/button'
 import { Card } from '../../../shared/ui/Card'
 import { PageHeader } from '../../../shared/ui/PageHeader'
 import { ChangePasswordDialog } from './components/ChangePasswordCard'
+import { LicenseCard } from './components/LicenseCard'
 
 export function SettingsPage() {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
@@ -17,6 +18,8 @@ export function SettingsPage() {
       </div>
 
       <div className="space-y-4">
+        <LicenseCard />
+
         <Card className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-secondary text-primary">
             <KeyRound className="size-6" aria-hidden="true" />

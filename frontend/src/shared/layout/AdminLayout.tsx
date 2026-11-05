@@ -8,6 +8,7 @@ const adminItems: HomeItem[] = [
   { to: '/admin/statistics', label: 'إحصائيات', description: 'مبيعات الأسبوع والأصناف', icon: 'reports' },
   { to: '/admin/daily-closings', label: 'إغلاق الحسابات اليومية', description: 'مطابقة درج كل وردية', icon: 'closing' },
   { to: '/admin/purchases', label: 'مشتريات', description: 'متابعة مشتريات المحل', icon: 'bag' },
+  { to: '/admin/expenses', label: 'المصروفات', description: 'أجور ودفعات ومصروفات أخرى', icon: 'expense' },
   { to: '/admin/categories', label: 'التصنيفات', description: 'تنظيم أقسام المنتجات', icon: 'categories' },
   { to: '/admin/products', label: 'المنتجات', description: 'إدارة القائمة والأسعار', icon: 'products' },
   { to: '/admin/users', label: 'المستخدمون', description: 'الحسابات والصلاحيات', icon: 'users' },

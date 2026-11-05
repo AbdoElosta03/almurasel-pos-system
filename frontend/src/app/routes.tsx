@@ -9,6 +9,9 @@ import { ProductsPage } from '../pages/admin/products/page'
 import { PurchasesPage } from '../pages/admin/purchases/page'
 import { PurchaseCreatePage } from '../pages/admin/purchases/create/page'
 import { PurchaseDetailsPage } from '../pages/admin/purchases/details/page'
+import { ExpensesPage } from '../pages/admin/expenses/page'
+import { ExpenseCreatePage } from '../pages/admin/expenses/create/page'
+import { ExpenseDetailsPage } from '../pages/admin/expenses/details/page'
 import { ReportsPage } from '../pages/admin/reports/page'
 import { StatisticsPage } from '../pages/admin/statistics/page'
 import { WeeklySalesPage } from '../pages/admin/statistics/weekly/page'
@@ -40,6 +43,9 @@ export function AppRoutes() {
             <Route path="purchases" element={<PurchasesPage />} />
             <Route path="purchases/new" element={<PurchaseCreatePage />} />
             <Route path="purchases/:purchaseId" element={<PurchaseDetailsPage />} />
+            <Route path="expenses" element={<ExpensesPage />} />
+            <Route path="expenses/new" element={<ExpenseCreatePage />} />
+            <Route path="expenses/:expenseId" element={<ExpenseDetailsPage />} />
             <Route path="reports" element={<ReportsPage />} />
             <Route path="statistics" element={<StatisticsPage />} />
             <Route path="statistics/weekly" element={<WeeklySalesPage />} />

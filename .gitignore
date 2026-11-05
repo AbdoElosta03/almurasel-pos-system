@@ -5,6 +5,12 @@ __pycache__/
 .mypy_cache/
 pos.db
 pos.db.old.*
+license.json
+license.json.tmp
+# أداة إصدار الرموز — للاستخدام المحلي فقط، لا تُسلَّم مع نسخة المقهى
+scripts/issue_license.py
+scripts/license_issuer_gui.py
+scripts/فتح-إصدار-التفعيل.bat
 .env*
 !.env
 !.env.example

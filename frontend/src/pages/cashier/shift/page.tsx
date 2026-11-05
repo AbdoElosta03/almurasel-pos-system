@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft, Clock3, ShoppingCart } from 'lucide-react'
 
 import { ApiError } from '../../../api/errors'
+import * as expensesApi from '../../../api/expenses'
 import * as shiftsApi from '../../../api/shifts'
-import type { Shift } from '../../../types'
+import type { CurrentDrawer, Shift } from '../../../types'
 import { formatLibyaDateTime, isOpenedOnPreviousLibyaDay } from '../../../utils/datetime'
 import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
@@ -13,19 +14,24 @@ import { LoadingBlock } from '../../../shared/ui/LoadingBlock'
 import { PageHeader } from '../../../shared/ui/PageHeader'
 import { CloseShiftPanel } from './components/CloseShiftPanel'
 import { CurrentShiftPanel } from './components/CurrentShiftPanel'
+import { DrawerExpensesPanel } from './components/DrawerExpensesPanel'
 import { OpenShiftPanel } from './components/OpenShiftPanel'
 
 export function ShiftPage() {
   const [shift, setShift] = useState<Shift | null>(null)
+  const [drawer, setDrawer] = useState<CurrentDrawer | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     try {
-      setShift(await shiftsApi.currentShift())
+      const current = await shiftsApi.currentShift()
+      setShift(current)
+      setDrawer(await expensesApi.currentDrawer())
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) {
         setShift(null)
+        setDrawer(null)
         return
       }
       throw err
@@ -73,13 +79,24 @@ export function ShiftPage() {
                 </Button>
               </Card>
             ) : null}
+            {drawer ? (
+              <DrawerExpensesPanel
+                items={drawer.items}
+                totalLyd={drawer.drawer_expenses_lyd}
+                onChanged={async () => setDrawer(await expensesApi.currentDrawer())}
+              />
+            ) : null}
           </div>
           <Card className="p-5 sm:p-6">
             <CloseShiftPanel
               shift={shift}
+              drawerExpensesLyd={drawer?.drawer_expenses_lyd ?? 0}
+              cashSalesLyd={drawer?.cash_sales_lyd ?? 0}
+              expectedDrawerLyd={drawer?.expected_drawer_lyd ?? shift.opening_cash_lyd}
               onClose={async (closingCashLyd) => {
                 await shiftsApi.closeShift(shift.id, { closing_cash_lyd: closingCashLyd })
                 setShift(null)
+                setDrawer(null)
               }}
             />
           </Card>
@@ -100,6 +117,7 @@ export function ShiftPage() {
               onOpen={async (openingCashLyd) => {
                 const opened = await shiftsApi.openShift({ opening_cash_lyd: openingCashLyd })
                 setShift(opened)
+                setDrawer(await expensesApi.currentDrawer())
               }}
             />
           </Card>

@@ -25,6 +25,7 @@ class DailyClosingOut(BaseModel):
     sales_total_lyd: LydAmount
     cash_sales_lyd: LydAmount
     card_sales_lyd: LydAmount
+    drawer_expenses_lyd: LydAmount
     expected_drawer_lyd: LydAmount
     counted_cash_lyd: LydAmount | None
     variance_lyd: LydAmount | None

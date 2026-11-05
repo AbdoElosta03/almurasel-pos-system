@@ -5,20 +5,24 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import * as shiftsApi from '../../api/shifts'
 import { ApiError } from '../../api/errors'
 import { useAuth } from '../../context/AuthContext'
+import { useLicense } from '../../context/LicenseContext'
 import { Button } from '../../components/ui/button'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { Icon } from '../ui/Icon'
 import { cn } from '../lib/cn'
+import { formatLicenseExpiry } from '../../utils/licenseLabels'
 import logoLight from '../../assets/logo-light.png'
 
 export function AppShell({ title, home, children }: { title: string; home: string; children: ReactNode }) {
   const { user, role, logout } = useAuth()
+  const { status: license } = useLicense()
   const navigate = useNavigate()
   const location = useLocation()
   const isHome = location.pathname === home || location.pathname === `${home}/`
   const isPos = location.pathname === '/cashier/pos'
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
   const [logoutChecking, setLogoutChecking] = useState(false)
+  const showLicenseWarning = Boolean(license?.active && license.warning && license.expires_at)
 
   const finishLogout = () => {
     setLogoutConfirmOpen(false)
@@ -63,6 +67,13 @@ export function AppShell({ title, home, children }: { title: string; home: strin
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background">
+      {showLicenseWarning ? (
+        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm font-bold text-amber-900 sm:px-6">
+          ينتهي التفعيل في {formatLicenseExpiry(license?.expires_at)}
+          {license?.days_remaining != null ? ` (متبقّي ${license.days_remaining} يومًا)` : ''}.
+          {role === 'admin' ? ' جدّد الرمز من الإعدادات قبل التوقّف.' : ' أبلغ المدير لتجديد الرمز قبل التوقّف.'}
+        </div>
+      ) : null}
       <header className="relative z-10 border-b border-border bg-card px-4 py-2 sm:px-6">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">

@@ -7,6 +7,9 @@ from app.core.config import settings
 
 settings.seed_on_startup = False
 settings.backup_auto_enabled = False
+settings.license_enforce = False
+settings.license_machine_id = "test-machine"
+settings.license_file = "license-test.json"
 
 from app.db.base import Base
 from app.db.session import get_db, make_engine

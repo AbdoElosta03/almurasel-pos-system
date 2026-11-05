@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     backup_auto_enabled: bool = True
     receipt_printer_name: str = "xprinter"
     receipt_print_timeout_seconds: int = 10
+    license_enforce: bool = True
+    license_secret: str = "almurasel-license-dev-secret-change-me-32b"
+    license_file: str = "license.json"
+    license_machine_id: str | None = None
 
 
 settings = Settings()
