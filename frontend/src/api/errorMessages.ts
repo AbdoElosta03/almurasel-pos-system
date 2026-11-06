@@ -4,7 +4,7 @@ export const errorMessages: Record<string, string> = {
   printer_ready: 'الطابعة لا تبلغ عن عطل وطابورها فارغ؛ هذا لا يؤكد وجود الورق',
   printer_windows_required: 'الطباعة المباشرة تحتاج خادم ويندوز متصلًا بالطابعة',
   printer_dependencies_missing: 'ثبّت متطلبات الطباعة على الخادم ثم أعد تشغيله',
-  printer_not_found: 'طابعة xprinter غير موجودة على جهاز الخادم؛ راجع اسمها واتصال USB',
+  printer_not_found: 'طابعة XP-80C غير موجودة على جهاز الخادم؛ راجع اسمها واتصال USB',
   printer_not_ready: 'الطابعة تبلغ عن مشكلة؛ افحص الورق والغطاء واتصال USB',
   printer_queue_busy: 'الطابعة مشغولة أو لديها فواتير معلّقة؛ لم تُضف فاتورة جديدة للطابور',
   printer_failed: 'تعذرت الطباعة المباشرة؛ افحص الطابعة وطابور ويندوز',

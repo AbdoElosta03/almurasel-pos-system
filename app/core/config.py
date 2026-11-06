@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     seed_on_startup: bool = True
     backup_dir: str = "backups"
     backup_auto_enabled: bool = True
-    receipt_printer_name: str = "xprinter"
+    receipt_printer_name: str = "XP-80C"
     receipt_print_timeout_seconds: int = 10
     license_enforce: bool = True
     license_secret: str = "almurasel-license-dev-secret-change-me-32b"
